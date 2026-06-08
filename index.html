@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Stunde Null · Die Ordnung des Wiederaufbaus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   STUNDE NULL — Escape Room
+   Politik & Wirtschaft · Q-Phase Grundkurs · Soziale Marktwirtschaft
+   Helles, seriös-wirtschaftliches Design
+   ============================================================ */
+
+:root{
+  --bg:           #f4f1ea;
+  --bg-soft:      #efeae0;
+  --surface:      #ffffff;
+  --surface-alt:  #faf8f3;
+  --ink:          #1d2733;
+  --ink-soft:     #43505f;
+  --ink-mute:     #6c7888;
+  --primary:      #1f4e5f;   /* tiefes Petrol */
+  --primary-dark: #163a47;
+  --primary-soft: #e6eef0;
+  --accent:       #a9772a;   /* gedämpftes Ocker/Gold */
+  --accent-bright:#c08f3e;
+  --accent-soft:  #f3ebda;
+  --success:      #2f7d41;
+  --success-bg:   #e9f3ea;
+  --error:        #b1442f;
+  --error-bg:     #f8eae6;
+  --missed:       #a9772a;
+  --missed-bg:    #f6efdf;
+  --border:       rgba(29,39,51,0.12);
+  --border-soft:  rgba(29,39,51,0.07);
+  --shadow-sm:    0 1px 3px rgba(29,39,51,0.07), 0 1px 2px rgba(29,39,51,0.05);
+  --shadow-md:    0 6px 24px rgba(29,39,51,0.10), 0 2px 6px rgba(29,39,51,0.06);
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Menlo', 'Courier New', monospace;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-weight:400;
+  line-height:1.65;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+body::before{
+  content:'';
+  position:fixed; inset:0; z-index:-2;
+  background:
+    radial-gradient(ellipse at 12% 8%, rgba(31,78,95,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 90% 92%, rgba(169,119,42,0.06) 0%, transparent 45%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  pointer-events:none;
+}
+
+.app{ min-height:100vh; display:flex; flex-direction:column; }
+
+/* ---------- Topbar ---------- */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(255,255,255,0.88);
+  backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border-soft);
+  padding:12px 26px;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+}
+.topbar-brand{
+  display:flex; align-items:center; gap:11px;
+  font-family:var(--font-display); font-weight:600; font-size:15px;
+  color:var(--primary); letter-spacing:0.01em;
+}
+.topbar-brand svg{ width:24px; height:24px; stroke:var(--primary); fill:none; }
+.topbar-progress{ display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.seal{
+  width:30px; height:30px; border-radius:50%;
+  border:1.5px solid var(--border); background:var(--surface);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:11px; font-weight:600;
+  color:var(--ink-mute); transition:all .35s cubic-bezier(.4,0,.2,1);
+}
+.seal.library{
+  width:11px; height:11px; border-radius:2px; border:1.5px solid var(--border);
+  background:transparent;
+}
+.seal.library.active{ border-color:var(--primary); background:var(--primary); }
+.seal.library.visited{ border-color:var(--accent); background:var(--accent); }
+.seal.active{ border-color:var(--primary); color:var(--primary); box-shadow:0 0 0 3px var(--primary-soft); }
+.seal.solved{
+  background:var(--accent); border-color:var(--accent); color:#fff;
+  font-family:var(--font-display); font-weight:700; font-size:14px; transform:rotate(-3deg);
+}
+
+/* ---------- Layout ---------- */
+.main{ flex:1; display:flex; align-items:flex-start; justify-content:center; padding:52px 22px 64px; }
+.screen{ width:100%; max-width:880px; animation:screenIn .55s cubic-bezier(.16,1,.3,1) both; }
+@keyframes screenIn{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+
+.site-footer{
+  text-align:center; font-size:11px; color:var(--ink-mute);
+  padding:18px 12px 22px; border-top:1px solid var(--border-soft);
+  font-family:var(--font-mono); letter-spacing:0.02em;
+}
+
+/* ---------- Typography ---------- */
+h1,h2,h3{ font-family:var(--font-display); font-weight:600; line-height:1.15; color:var(--ink); letter-spacing:-0.01em; }
+.kicker{
+  font-family:var(--font-mono); font-size:11px; font-weight:600; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:14px;
+  display:flex; align-items:center; gap:11px;
+}
+.kicker::before{ content:''; width:26px; height:1px; background:var(--accent); display:inline-block; }
+.title-mega{ font-size:clamp(40px,7vw,68px); font-weight:600; line-height:1; margin-bottom:20px; letter-spacing:-0.025em; }
+.title-mega em{ font-style:italic; font-weight:400; color:var(--primary); }
+.lede{ font-family:var(--font-display); font-size:clamp(17px,2vw,21px); font-weight:400; line-height:1.5; color:var(--ink-soft); max-width:60ch; margin-bottom:28px; }
+.section-title{ font-size:clamp(28px,4vw,40px); font-weight:600; margin-bottom:8px; }
+p{ margin-bottom:14px; }
+p.body-lg{ font-size:16.5px; line-height:1.7; }
+.text-mute{ color:var(--ink-mute); }
+
+/* ---------- Cards ---------- */
+.card{
+  background:var(--surface); border:1px solid var(--border-soft);
+  border-radius:8px; padding:30px 34px; margin-bottom:22px; box-shadow:var(--shadow-sm); position:relative;
+}
+.card-accent::before{
+  content:''; position:absolute; left:0; top:22px; bottom:22px; width:3px;
+  background:var(--accent); border-radius:0 2px 2px 0;
+}
+.briefing{ font-family:var(--font-display); font-style:italic; font-size:17px; line-height:1.7; color:var(--ink); padding-left:18px; }
+.briefing .speaker{
+  display:block; font-family:var(--font-mono); font-style:normal; font-size:10px; font-weight:600;
+  letter-spacing:0.18em; text-transform:uppercase; color:var(--accent); margin-bottom:8px;
+}
+
+/* ---------- Buttons ---------- */
+.btn{
+  display:inline-flex; align-items:center; gap:9px; padding:13px 26px; border:none; border-radius:4px;
+  font-family:var(--font-body); font-size:13.5px; font-weight:600; letter-spacing:0.02em;
+  cursor:pointer; transition:all .22s cubic-bezier(.4,0,.2,1); text-decoration:none;
+}
+.btn-primary{ background:var(--primary); color:#fff; }
+.btn-primary:hover{ background:var(--primary-dark); transform:translateY(-1px); box-shadow:var(--shadow-md); }
+.btn-ghost{ background:transparent; color:var(--primary); border:1.5px solid var(--border); }
+.btn-ghost:hover{ border-color:var(--primary); }
+.btn-arrow::after{ content:'\2192'; font-family:var(--font-mono); font-size:15px; }
+.btn-row{ display:flex; gap:14px; flex-wrap:wrap; margin-top:22px; align-items:center; }
+
+/* ---------- Inputs ---------- */
+.field-label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+.text-input{
+  width:100%; padding:12px 14px; background:var(--surface-alt); border:1.5px solid var(--border);
+  border-radius:4px; color:var(--ink); font-family:var(--font-body); font-size:15px;
+}
+.text-input:focus{ outline:none; border-color:var(--primary); background:#fff; }
+.input-error{ display:none; margin-top:14px; padding:10px 14px; background:var(--error-bg); border-left:3px solid var(--error); color:var(--ink); font-size:13px; border-radius:4px; }
+
+/* ---------- Room header ---------- */
+.room-header{ display:flex; align-items:flex-start; gap:18px; margin-bottom:18px; }
+.room-number{ font-family:var(--font-display); font-size:46px; font-weight:600; color:var(--accent); line-height:0.9; }
+.room-location{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink-mute); }
+.room-name{ font-family:var(--font-display); font-size:26px; font-weight:600; color:var(--ink); }
+
+/* ---------- Library ---------- */
+.library-banner{
+  display:flex; gap:14px; align-items:flex-start; background:var(--primary-soft);
+  border:1px solid rgba(31,78,95,0.18); border-radius:8px; padding:16px 18px; margin-bottom:26px;
+}
+.library-banner svg{ width:22px; height:22px; stroke:var(--primary); fill:none; flex-shrink:0; margin-top:2px; }
+.library-banner .warn{ display:block; margin-top:6px; color:var(--primary-dark); font-weight:600; font-size:13.5px; }
+.lib-section{ margin-bottom:22px; }
+.lib-section-title{ font-family:var(--font-display); font-size:19px; font-weight:600; color:var(--primary); margin-bottom:8px; }
+.lib-bullets{ margin:8px 0 0 20px; }
+.lib-bullets li{ margin-bottom:7px; }
+.lib-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:12px; }
+@media(max-width:600px){ .lib-grid{ grid-template-columns:1fr; } }
+.lib-card{ background:var(--surface-alt); border:1px solid var(--border-soft); border-radius:6px; padding:14px 16px; }
+.lib-card-sub{ font-family:var(--font-mono); font-size:9.5px; letter-spacing:0.12em; text-transform:uppercase; color:var(--accent); }
+.lib-card-title{ font-family:var(--font-display); font-size:16px; font-weight:600; margin:2px 0 5px; }
+.lib-card-body{ font-size:13.5px; color:var(--ink-soft); }
+.lib-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; }
+.lib-table th,.lib-table td{ text-align:left; padding:9px 11px; border-bottom:1px solid var(--border-soft); }
+.lib-table th{ font-family:var(--font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-mute); }
+.lib-warning-bar{
+  display:flex; gap:12px; align-items:center; background:var(--accent-soft);
+  border:1px solid rgba(169,119,42,0.3); border-radius:8px; padding:14px 18px; margin:22px 0;
+}
+.lib-warning-bar svg{ width:22px; height:22px; stroke:var(--accent); fill:none; flex-shrink:0; }
+
+/* ---------- Video ---------- */
+.video-wrap{ position:relative; width:100%; padding-top:56.25%; border-radius:8px; overflow:hidden; box-shadow:var(--shadow-md); background:#000; margin:8px 0 8px; }
+.video-wrap iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.fallback-line{ display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:14px; font-size:14px; color:var(--ink-soft); }
+
+/* ---------- Puzzle: single choice ---------- */
+.mc-question{ margin-bottom:24px; }
+.mc-q-text{ font-weight:600; font-size:16px; margin-bottom:12px; }
+.mc-option{
+  display:flex; align-items:flex-start; gap:11px; width:100%; text-align:left;
+  padding:13px 16px; margin-bottom:9px; background:var(--surface); border:1.5px solid var(--border);
+  border-radius:6px; cursor:pointer; font-size:14.5px; line-height:1.5; transition:all .18s ease; font-family:var(--font-body); color:var(--ink);
+}
+.mc-option:hover{ border-color:var(--primary); }
+.mc-option .dot{ width:18px; height:18px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; margin-top:1px; }
+.mc-option.selected{ border-color:var(--primary); background:var(--primary-soft); }
+.mc-option.selected .dot{ border-color:var(--primary); background:var(--primary); box-shadow:inset 0 0 0 3px var(--surface); }
+.mc-option.correct{ border-color:var(--success); background:var(--success-bg); }
+.mc-option.incorrect{ border-color:var(--error); background:var(--error-bg); }
+
+/* ---------- Puzzle: lückentext + matching dropdowns ---------- */
+.cloze{ font-size:16px; line-height:2.2; }
+.cloze select, .match-select{
+  font-family:var(--font-body); font-size:14px; font-weight:600; color:var(--primary);
+  background:var(--accent-soft); border:1.5px solid var(--accent); border-radius:5px; padding:4px 8px; margin:0 2px;
+}
+.cloze select.ok, .match-select.ok{ border-color:var(--success); background:var(--success-bg); color:var(--success); }
+.cloze select.bad, .match-select.bad{ border-color:var(--error); background:var(--error-bg); color:var(--error); }
+.match-row{ display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; }
+.match-left{ flex:1; min-width:200px; font-weight:600; font-size:15px; }
+.match-left .lc-sub{ display:block; font-weight:400; font-size:13px; color:var(--ink-mute); }
+
+/* ---------- Puzzle: multi-select grid ---------- */
+.multi-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:11px; margin:20px 0; }
+@media(max-width:600px){ .multi-grid{ grid-template-columns:1fr; } }
+.multi-card{
+  display:flex; align-items:flex-start; gap:11px; padding:15px 16px; background:var(--surface);
+  border:1.5px solid var(--border); border-radius:6px; cursor:pointer; font-size:14px; line-height:1.45;
+  text-align:left; transition:all .18s ease; font-family:var(--font-body); color:var(--ink);
+}
+.multi-card:hover{ border-color:var(--primary); }
+.multi-card .box{ width:18px; height:18px; border-radius:4px; border:2px solid var(--border); flex-shrink:0; margin-top:1px; }
+.multi-card.selected{ border-color:var(--primary); background:var(--primary-soft); }
+.multi-card.selected .box{ border-color:var(--primary); background:var(--primary); }
+.multi-card.correct{ border-color:var(--success); background:var(--success-bg); }
+.multi-card.incorrect{ border-color:var(--error); background:var(--error-bg); }
+.multi-card.missed{ border-color:var(--missed); background:var(--missed-bg); }
+
+/* ---------- Puzzle: classify rows ---------- */
+.classify-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border-soft); flex-wrap:wrap; }
+.classify-text{ flex:1; min-width:210px; font-size:14.5px; }
+.classify-btns{ display:flex; gap:8px; }
+.classify-btn{
+  font-family:var(--font-body); font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:5px;
+  border:1.5px solid var(--border); background:var(--surface); color:var(--ink-soft); cursor:pointer; transition:all .18s ease;
+}
+.classify-btn:hover{ border-color:var(--primary); }
+.classify-btn.active{ border-color:var(--primary); background:var(--primary); color:#fff; }
+.classify-row.correct{ background:var(--success-bg); }
+.classify-row.incorrect{ background:var(--error-bg); }
+
+/* ---------- Status / hint ---------- */
+.status{ padding:14px 18px; border-radius:6px; margin:18px 0; font-size:14px; display:none; }
+.status.show{ display:block; animation:screenIn .3s ease both; }
+.status .label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; margin-bottom:4px; }
+.status-success{ background:var(--success-bg); border-left:3px solid var(--success); }
+.status-success .label{ color:var(--success); }
+.status-warning{ background:var(--error-bg); border-left:3px solid var(--error); }
+.status-warning .label{ color:var(--error); }
+.hint-box{ display:none; background:var(--surface-alt); border:1px dashed var(--border); border-radius:6px; padding:14px 18px; margin-top:16px; font-size:14px; color:var(--ink-soft); }
+.hint-box.show{ display:block; }
+.hint-box .label{ display:block; font-family:var(--font-mono); font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); margin-bottom:5px; }
+.hint-btn{ background:none; border:none; color:var(--primary); font-family:var(--font-body); font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline; }
+
+/* ---------- Reveal overlay ---------- */
+.reveal-overlay{ position:fixed; inset:0; z-index:200; background:rgba(22,58,71,0.55); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; padding:20px; }
+.reveal-overlay.show{ display:flex; animation:screenIn .3s ease both; }
+.reveal-card{ background:var(--surface); border-radius:12px; box-shadow:var(--shadow-md); padding:40px 44px; max-width:440px; text-align:center; }
+.reveal-letter{ font-family:var(--font-display); font-size:96px; font-weight:700; color:var(--accent); line-height:1; }
+.reveal-caption{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--ink-mute); margin-top:6px; }
+.reveal-progress{ display:flex; gap:8px; justify-content:center; margin:22px 0 26px; }
+.reveal-progress-letter{ width:38px; height:46px; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:22px; font-weight:700; color:var(--ink-mute); background:var(--surface-alt); border:1px solid var(--border); border-radius:5px; }
+.reveal-progress-letter.lit{ color:#fff; background:var(--accent); border-color:var(--accent); }
+
+/* ---------- Final ---------- */
+.final-hero{ text-align:center; margin-bottom:34px; }
+.final-code{ font-family:var(--font-display); font-size:clamp(54px,12vw,104px); font-weight:700; letter-spacing:0.08em; color:var(--accent); line-height:1; }
+.final-actions{ display:grid; gap:14px; }
+.final-action{ display:block; width:100%; text-align:left; background:var(--surface-alt); border:1.5px solid var(--border); border-radius:8px; padding:18px 20px; cursor:pointer; transition:all .2s ease; font-family:var(--font-body); }
+.final-action:hover{ border-color:var(--primary); box-shadow:var(--shadow-sm); }
+.final-action .label{ font-family:var(--font-mono); font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+.final-action .title{ font-family:var(--font-display); font-size:18px; font-weight:600; color:var(--ink); margin:3px 0 4px; }
+.final-action .desc{ font-size:13.5px; color:var(--ink-soft); }
+.font-mono{ font-family:var(--font-mono); }
+.muted-list{ margin:6px 0 0 18px; }
+.muted-list li{ margin-bottom:6px; color:var(--ink-soft); font-size:14px; }
+
+/* Erhard portrait card */
+.erhard-card{ display:flex; gap:22px; align-items:flex-start; flex-wrap:wrap; background:var(--surface-alt); border:1px solid var(--border-soft); border-radius:10px; padding:22px 24px; }
+.erhard-frame{ width:128px; flex-shrink:0; }
+.erhard-frame svg{ width:128px; height:160px; display:block; }
+.erhard-cap{ text-align:center; font-family:var(--font-mono); font-size:9px; letter-spacing:0.06em; color:var(--ink-mute); margin-top:6px; }
+.erhard-body{ flex:1; min-width:240px; }
+.erhard-body h3{ font-size:20px; margin-bottom:2px; }
+.erhard-dates{ font-family:var(--font-mono); font-size:11px; letter-spacing:0.1em; color:var(--accent); margin-bottom:10px; }
+
+/* House SVG */
+.house-wrap{ text-align:center; margin:10px 0 4px; }
+.house-wrap svg{ max-width:440px; width:100%; height:auto; }
+</style>
+</head>
+<body>
+<!-- ==== Eingebetteter Feiditor (Digitales Arbeitsblatt) ==== -->
+<script type="text/template" id="feiditor-src">
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feiditor</title>
+<style>
+  :root{
+    --paper:#f7f4ec; --paper2:#fffdf8; --ink:#221f1a; --muted:#6f675a;
+    --line:#ddd5c4; --accent:#6b4f2c; --accent2:#8a6a3c; --shadow:rgba(40,30,15,.10);
+    --serif:"Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,Georgia,serif;
+    --sans:"Avenir Next",Avenir,"Segoe UI","Helvetica Neue",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--paper); color:var(--ink); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+  }
+  .screen{display:none; min-height:100vh}
+  .screen.active{display:block}
+
+  /* ---------- Start ---------- */
+  #screen-start{display:none; place-items:center; padding:40px 20px}
+  #screen-start.active{display:grid}
+  .card{
+    width:100%; max-width:440px; background:var(--paper2);
+    border:1px solid var(--line); border-radius:14px; padding:40px 36px;
+    box-shadow:0 18px 50px -28px var(--shadow);
+  }
+  .brand{font-family:var(--serif); font-size:13px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin:0 0 6px}
+  .card h1{font-family:var(--serif); font-weight:600; font-size:30px; margin:0 0 4px; letter-spacing:.01em}
+  .card p.sub{color:var(--muted); margin:0 0 26px; font-size:14.5px}
+  label{display:block; font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+  .field{margin-bottom:18px}
+  input[type=text]{
+    width:100%; font-family:var(--serif); font-size:18px; color:var(--ink);
+    background:var(--paper); border:1px solid var(--line); border-radius:9px;
+    padding:11px 13px; outline:none; transition:border-color .15s, box-shadow .15s;
+  }
+  input[type=text]:focus{border-color:var(--accent2); box-shadow:0 0 0 3px rgba(138,106,60,.16)}
+  .btn{
+    font-family:var(--sans); font-size:15px; font-weight:600; letter-spacing:.01em;
+    color:var(--paper2); background:var(--ink); border:1px solid var(--ink);
+    border-radius:9px; padding:12px 18px; cursor:pointer; transition:transform .06s, background .15s;
+  }
+  .btn:hover{background:#332e25}
+  .btn:active{transform:translateY(1px)}
+  .btn.block{width:100%; margin-top:6px}
+  .btn.ghost{background:transparent; color:var(--ink); border-color:var(--line)}
+  .btn.ghost:hover{background:var(--paper)}
+  .err{color:#b3261e; font-size:13.5px; min-height:18px; margin:2px 0 0}
+  .foot{margin-top:24px; padding-top:16px; border-top:1px solid var(--line); text-align:center}
+  .foot a{color:var(--muted); font-size:12.5px; text-decoration:none; letter-spacing:.04em}
+  .foot a:hover{color:var(--accent); text-decoration:underline}
+
+  /* ---------- Editor ---------- */
+  #screen-editor{display:none; flex-direction:column; height:100vh}
+  #screen-editor.active{display:flex}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:13px 22px; border-bottom:1px solid var(--line); background:var(--paper2);
+  }
+  .who{font-family:var(--serif); font-size:16px}
+  .who .lbl{font-family:var(--sans); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-right:8px}
+  .count{font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .paperwrap{flex:1; overflow:auto; display:flex; flex-direction:column; align-items:center; padding:34px 20px 150px}
+  .sheet{
+    width:100%; max-width:760px; background:var(--paper2); border:1px solid var(--line);
+    border-radius:6px; box-shadow:0 24px 60px -40px var(--shadow); padding:56px 60px;
+  }
+  #editor{
+    width:100%; min-height:60vh; resize:none; border:0; outline:0;
+    font-family:var(--serif); font-size:18px; line-height:32px; color:var(--ink);
+    background-color:transparent;
+    background-image:repeating-linear-gradient(to bottom,
+      transparent 0,
+      transparent 31px,
+      var(--line) 31px,
+      var(--line) 32px);
+    background-attachment:local;
+    padding:0;
+  }
+  #editor::placeholder{color:#b9b0a0}
+  .moodle-hint{
+    max-width:760px; margin:14px auto 0; padding:14px 20px;
+    background:#fdecea; border:1.5px solid #f5b8b1; border-radius:8px;
+    color:#a72020; font-family:var(--sans); font-size:14.5px; font-weight:600;
+    text-align:center; line-height:1.5;
+  }
+  .actionbar{
+    position:fixed; left:0; right:0; bottom:0; display:flex; justify-content:center;
+    padding:16px 16px 46px; background:linear-gradient(to top, var(--paper) 60%, rgba(247,244,236,0));
+  }
+  .copyright{
+    position:fixed; left:0; right:0; bottom:13px; text-align:center;
+    font-size:11px; letter-spacing:.05em; color:var(--muted); pointer-events:none; z-index:6;
+  }
+
+  /* ---------- Lehrkraft ---------- */
+  #screen-teacher{display:none; place-items:start center; padding:40px 20px 80px}
+  #screen-teacher.active{display:grid}
+  .panel{width:100%; max-width:920px}
+  .panel h1{font-family:var(--serif); font-weight:600; font-size:26px; margin:0 0 4px}
+  .panel .sub{color:var(--muted); margin:0 0 22px; font-size:14.5px}
+  .drop{
+    background:var(--paper2); border:1.5px dashed var(--line); border-radius:12px;
+    padding:26px; text-align:center; color:var(--muted); font-size:14.5px;
+  }
+  .drop strong{color:var(--ink)}
+  .row{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:14px}
+  input[type=password]{
+    font-family:var(--serif); font-size:18px; letter-spacing:.12em; width:180px;
+    background:var(--paper); border:1px solid var(--line); border-radius:9px; padding:10px 12px; outline:none;
+  }
+  input[type=password]:focus{border-color:var(--accent2); box-shadow:0 0 0 3px rgba(138,106,60,.16)}
+  .hidden{display:none !important}
+  .backlink{display:inline-block; margin-bottom:18px; color:var(--muted); font-size:13px; text-decoration:none}
+  .backlink:hover{color:var(--accent)}
+
+  /* analysis */
+  .legend{display:flex; gap:18px; flex-wrap:wrap; margin:20px 0 14px; font-size:13.5px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .sw{width:13px; height:13px; border-radius:3px; display:inline-block}
+  .stat{font-size:13px; color:var(--muted); margin:0 0 16px; font-variant-numeric:tabular-nums}
+  .analysis{
+    background:var(--paper2); border:1px solid var(--line); border-radius:10px;
+    padding:30px 34px; font-family:var(--serif); font-size:17.5px; line-height:1.85;
+    white-space:pre-wrap; word-wrap:break-word; overflow-wrap:anywhere;
+  }
+  .nmeta{font-family:var(--sans); font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<!-- ============ START ============ -->
+<section id="screen-start" class="screen active">
+  <div class="card">
+    <p class="brand">Feiditor</p>
+    <h1>Bevor du beginnst</h1>
+    <p class="sub">Bitte trage deinen Namen ein. Danach öffnet sich der Schreibbereich.</p>
+    <div class="field">
+      <label for="vorname">Vorname</label>
+      <input type="text" id="vorname" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="field">
+      <label for="nachname">Nachname</label>
+      <input type="text" id="nachname" autocomplete="off" spellcheck="false">
+    </div>
+    <p class="err" id="start-err"></p>
+    <button class="btn block" id="start-btn">Schreibbereich öffnen</button>
+    <div class="foot"><a href="#" id="to-teacher">Lehrkraft</a></div>
+  </div>
+</section>
+
+<!-- ============ EDITOR ============ -->
+<section id="screen-editor" class="screen">
+  <div class="topbar">
+    <div class="who"><span class="lbl">Verfasser:in</span><span id="who-name"></span></div>
+    <div class="count"><span id="charcount">0</span> Zeichen</div>
+  </div>
+  <div class="paperwrap">
+    <div class="sheet">
+      <textarea id="editor" placeholder="Hier schreiben…" spellcheck="true" autocomplete="off"></textarea>
+    </div>
+    <div class="moodle-hint">Wandle diesen Text nun in eine PDF-Datei um und lade diese PDF-Datei in der korrekten Abgabe auf Moodle hoch.</div>
+    <div class="moodle-hint">Aufgabe 7: Nachdem du die Lösungen zu Aufgaben 1-6 auf Moodle hochgeladen hast, bearbeitest du die auf Moodle verlinkte Aufgabe "Text verfassen ..."</div>
+  </div>
+  <div class="actionbar">
+    <button class="btn" id="export-btn">Text in PDF-Datei umwandeln</button>
+  </div>
+</section>
+
+<!-- ============ LEHRKRAFT ============ -->
+<section id="screen-teacher" class="screen">
+  <div class="panel">
+    <a href="#" class="backlink" id="back-start">← zurück</a>
+    <h1>Auswertung für die Lehrkraft</h1>
+    <p class="sub">Laden Sie die vom Schüler abgegebene PDF-Datei und geben Sie den Code ein.
+       Der Code ist die Anzahl der Buchstaben im Vornamen des Schülers multipliziert mit 1104
+       (Beispiel: Vorname „Lina" = 4 Buchstaben → Code 4416). Danach wird der Text farblich
+       ausgewertet, und die Escape-Room-Daten (Name, Geburtsdatum, Bestätigungscode) werden angezeigt.</p>
+
+    <div class="drop">
+      <p style="margin:0 0 10px"><strong>PDF auswählen</strong> oder hierher ziehen</p>
+      <input type="file" id="pdf-input" accept="application/pdf,.pdf">
+    </div>
+    <p class="err" id="teacher-err"></p>
+
+    <div id="code-area" class="hidden">
+      <div class="row">
+        <input type="password" id="code-input" inputmode="numeric" placeholder="Code">
+        <button class="btn" id="code-btn">Auswertung anzeigen</button>
+      </div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+</section>
+
+<div id="pagefoot" class="copyright">Copyright Jan-Rickmer Feindt</div>
+
+<script>
+/* ====================================================================== *
+ *  Selbst gebauter, vollständig offline laufender Editor mit Tracking.   *
+ *  Keine externen Bibliotheken, keine Netzwerkaufrufe.                   *
+ * ====================================================================== */
+
+/* ---------- Helvetica-Glyphbreiten (AFM, Einheiten/1000), nach Byte ---------- */
+const HELV={32:278,33:278,34:355,35:556,36:556,37:889,38:667,39:191,40:333,41:333,42:389,43:584,44:278,45:333,46:278,47:278,48:556,49:556,50:556,51:556,52:556,53:556,54:556,55:556,56:556,57:556,58:278,59:278,60:584,61:584,62:584,63:556,64:1015,65:667,66:667,67:722,68:722,69:667,70:611,71:778,72:722,73:278,74:500,75:667,76:556,77:833,78:722,79:778,80:667,81:778,82:722,83:667,84:611,85:722,86:667,87:944,88:667,89:667,90:611,91:278,92:278,93:278,94:469,95:556,96:333,97:556,98:556,99:500,100:556,101:556,102:278,103:556,104:556,105:222,106:222,107:500,108:222,109:833,110:556,111:556,112:556,113:556,114:333,115:500,116:278,117:556,118:500,119:722,120:500,121:500,122:500,123:334,124:260,125:334,126:584,133:1000,145:222,146:222,147:333,148:333,149:350,150:556,151:1000,160:278,161:333,162:556,163:556,164:556,165:556,166:260,167:556,168:333,169:737,170:370,171:556,172:584,173:333,174:737,175:333,176:400,177:584,178:333,179:333,180:333,181:556,182:537,183:278,184:333,185:333,186:365,187:556,188:834,189:834,190:834,191:611,192:667,193:667,194:667,195:667,196:667,197:667,198:1000,199:722,200:667,201:667,202:667,203:667,204:278,205:278,206:278,207:278,208:722,209:722,210:778,211:778,212:778,213:778,214:778,215:584,216:778,217:722,218:722,219:722,220:722,221:667,222:667,223:611,224:556,225:556,226:556,227:556,228:556,229:556,230:889,231:500,232:556,233:556,234:556,235:556,236:278,237:278,238:278,239:278,240:556,241:556,242:556,243:556,244:556,245:556,246:556,247:584,248:611,249:556,250:556,251:556,252:556,253:500,254:556,255:500};
+function afm(b){return HELV[b]!==undefined?HELV[b]:556;}
+const CP1252={0x20AC:128,0x201A:130,0x0192:131,0x201E:132,0x2026:133,0x2020:134,0x2021:135,0x02C6:136,0x2030:137,0x0160:138,0x2039:139,0x0152:140,0x017D:142,0x2018:145,0x2019:146,0x201C:147,0x201D:148,0x2022:149,0x2013:150,0x2014:151,0x02DC:152,0x2122:153,0x0161:154,0x203A:155,0x0153:156,0x017E:158,0x0178:159};
+function charByte(ch){const cp=ch.codePointAt(0);if(cp<=0xFF)return cp;if(CP1252[cp]!==undefined)return CP1252[cp];return 0x3F;}
+function charWidth(ch,s){return afm(charByte(ch))/1000*s;}
+function textWidth(str,s){let w=0;for(const ch of str)w+=charWidth(ch,s);return w;}
+function encStr(str){let o="";for(const ch of str){const b=charByte(ch);if(b===0x28)o+="\\(";else if(b===0x29)o+="\\)";else if(b===0x5C)o+="\\\\";else o+=String.fromCharCode(b);}return o;}
+
+function wrapText(text,maxW,size){
+  const lines=[]; const paras=text.replace(/\r\n?/g,"\n").split("\n");
+  for(const para of paras){
+    if(para===""){lines.push("");continue;}
+    const words=para.split(/( )/); let cur="";
+    const pushWord=(w)=>{
+      if(textWidth(w,size)>maxW){
+        let chunk="";
+        for(const ch of w){
+          if(textWidth(chunk+ch,size)>maxW&&chunk!==""){
+            if(cur!==""){lines.push(cur);cur="";} lines.push(chunk); chunk=ch;
+          } else chunk+=ch;
+        }
+        if(chunk){if(cur!==""){lines.push(cur);cur="";} cur=chunk;} return;
+      }
+      if(textWidth(cur+w,size)>maxW&&cur!==""){lines.push(cur.replace(/ +$/,""));cur=w.trim()===""?"":w;}
+      else cur+=w;
+    };
+    for(const w of words) pushWord(w);
+    lines.push(cur.replace(/ +$/,""));
+  }
+  return lines;
+}
+
+function buildPdf(opts){
+  const PW=595.28,PH=841.89, ML=56,MR=56,MT=56,MB=64;
+  const HEAD_SIZE=13,BODY_SIZE=11,NOTE_SIZE=11,LEAD=15.5;
+  const usableW=PW-ML-MR;
+  const headerBaseline=PH-MT-HEAD_SIZE, ruleY=headerBaseline-6, bodyTop=ruleY-22, bodyBottom=MB+24;
+  const allLines=wrapText(opts.body||"",usableW,BODY_SIZE);
+  if(allLines.length===0) allLines.push("");
+  const pages=[]; let idx=0;
+  while(idx<allLines.length){
+    const pageLines=[]; let y=bodyTop;
+    while(idx<allLines.length&&y>=bodyBottom){pageLines.push({text:allLines[idx],y});y-=LEAD;idx++;}
+    pages.push({lines:pageLines});
+  }
+  const nPages=pages.length;
+
+  // roter Moodle-Hinweis unten auf der letzten Seite
+  const noteText="Bitte diese PDF-Datei herunterladen und bei Moodle hochladen.";
+  const noteLines=wrapText(noteText,usableW,NOTE_SIZE);
+  const noteBottom=46; // Grundlinie der untersten Hinweiszeile
+
+  const pageObjNum=(i)=>4+i*2, contObjNum=(i)=>5+i*2;
+  const objects={};
+  objects[1]="<< /Type /Catalog /Pages 2 0 R >>";
+  objects[2]=`<< /Type /Pages /Count ${nPages} /Kids [${pages.map((_,i)=>`${pageObjNum(i)} 0 R`).join(" ")}] >>`;
+  objects[3]="<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>";
+  for(let i=0;i<nPages;i++){
+    objects[pageObjNum(i)]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PW.toFixed(2)} ${PH.toFixed(2)}] /Resources << /Font << /F1 3 0 R >> >> /Contents ${contObjNum(i)} 0 R >>`;
+    let s="0.5 w\n";
+    s+=`BT /F1 ${HEAD_SIZE} Tf 0 0 0 rg ${ML} ${headerBaseline.toFixed(2)} Td (${encStr(opts.name||"")}) Tj ET\n`;
+    s+=`${ML} ${ruleY.toFixed(2)} m ${(PW-MR).toFixed(2)} ${ruleY.toFixed(2)} l S\n`;
+    const pl=pages[i].lines;
+    if(pl.length){
+      s+=`BT /F1 ${BODY_SIZE} Tf 0 0 0 rg ${ML} ${pl[0].y.toFixed(2)} Td ${LEAD} TL\n`;
+      for(let j=0;j<pl.length;j++){if(j>0)s+="T*\n"; s+=`(${encStr(pl[j].text)}) Tj\n`;}
+      s+="ET\n";
+    }
+    if(i===nPages-1){ // roter Hinweis nur auf der letzten Seite
+      const topY=noteBottom+(noteLines.length-1)*LEAD;
+      s+=`BT /F1 ${NOTE_SIZE} Tf 0.78 0.05 0.05 rg ${ML} ${topY.toFixed(2)} Td ${LEAD} TL\n`;
+      for(let j=0;j<noteLines.length;j++){if(j>0)s+="T*\n"; s+=`(${encStr(noteLines[j])}) Tj\n`;}
+      s+="ET\n";
+    }
+    objects[contObjNum(i)]={stream:s};
+  }
+  let pdf="%PDF-1.7\n%\u00E2\u00E3\u00CF\u00D3\n";
+  if(opts.trackB64) pdf+=`%TRACKDATA ${opts.trackB64}\n`;
+  const offsets={}; const maxNum=3+nPages*2;
+  for(let n=1;n<=maxNum;n++){
+    offsets[n]=pdf.length; const o=objects[n];
+    if(o&&o.stream!==undefined){const st=o.stream;pdf+=`${n} 0 obj\n<< /Length ${st.length} >>\nstream\n${st}endstream\nendobj\n`;}
+    else pdf+=`${n} 0 obj\n${o}\nendobj\n`;
+  }
+  const xrefStart=pdf.length;
+  pdf+=`xref\n0 ${maxNum+1}\n0000000000 65535 f \n`;
+  for(let n=1;n<=maxNum;n++) pdf+=String(offsets[n]).padStart(10,"0")+" 00000 n \n";
+  pdf+=`trailer\n<< /Size ${maxNum+1} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`;
+  return pdf;
+}
+
+/* ---------------- gemeinsame Krypto- & Auswertungs-Funktionen ---------------- *
+ * Diese werden per toString() in die Lehrkraft-Seite (data:-Link) eingebettet,  *
+ * damit es nur EINE Quelle der Wahrheit gibt.                                   */
+function bytesToB64(bytes){let bin="";const CH=0x8000;for(let i=0;i<bytes.length;i+=CH)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+CH));return btoa(bin);}
+function b64ToBytes(b64){const bin=atob(b64);const out=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out;}
+async function _key(codeStr,usage){const mat=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(codeStr));return crypto.subtle.importKey("raw",mat,{name:"AES-GCM"},false,usage);}
+async function aesEncrypt(plain,codeStr){const iv=crypto.getRandomValues(new Uint8Array(12));const key=await _key(codeStr,["encrypt"]);const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(plain));return bytesToB64(iv)+":"+bytesToB64(new Uint8Array(ct));}
+async function aesDecrypt(bundle,codeStr){const parts=bundle.split(":");const iv=b64ToBytes(parts[0]);const ct=b64ToBytes(parts[1]);const key=await _key(codeStr,["decrypt"]);const pt=await crypto.subtle.decrypt({name:"AES-GCM",iv},key,ct);return new TextDecoder().decode(pt);}
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]));}
+function classify(isVisible,src,gap){
+  const COL={plain:"#23201b",paste:"#b3261e",fast:"#c2710c",slow:"#1f7a34",system:"#9c948a"};
+  if(!isVisible) return COL.plain;
+  if(src==="s") return COL.system;           // System-Text (vorbefüllte Aufgaben) -> gedämpftes Grau
+  if(src==="p") return COL.paste;            // aus Zwischenablage -> rot
+  if(gap>=0&&gap<=15) return COL.paste;      // <= 0,015 s getippt -> rot
+  if(gap>15&&gap<=70) return COL.fast;       // 0,015-0,07 s -> orange
+  return COL.slow;                           // > 0,07 s / erstes Zeichen -> grün
+}
+function renderAnalysis(payload){
+  const t=payload.t, m=payload.m||[];
+  let html=""; let total=0,red=0,orange=0,green=0,sysCount=0;
+  const WS=/\s/;
+  for(let i=0;i<t.length;i++){
+    const ch=t[i]; const isV=!WS.test(ch);
+    const mark=m[i]||["t",-1]; const src=mark[0]; const gap=mark[1];
+    const col=classify(isV,src,gap);
+    if(isV){
+      if(src==="s"){ sysCount++; }
+      else{
+        total++;
+        if(col==="#b3261e") red++;
+        else if(col==="#c2710c") orange++;
+        else green++;
+      }
+    }
+    html+=`<span style="color:${col}">${esc(ch)}</span>`;
+  }
+  const pct=(x)=>total?Math.round(x/total*100):0;
+  const legend=
+    '<div class="legend">'+
+      '<span><i class="sw" style="background:#9c948a"></i>vorbefüllte Aufgabenstellung (kein Schülertext)</span>'+
+      '<span><i class="sw" style="background:#b3261e"></i>eingefügt oder ≤ 0,015 s getippt</span>'+
+      '<span><i class="sw" style="background:#c2710c"></i>0,015–0,07 s nach vorherigem Zeichen getippt</span>'+
+      '<span><i class="sw" style="background:#1f7a34"></i>&gt; 0,07 s nach vorherigem Zeichen getippt</span>'+
+    '</div>';
+  const stat=`<p class="stat">Schülertext (ohne vorbefüllte Aufgaben): ${total} Zeichen · rot: ${red} (${pct(red)} %) · orange: ${orange} (${pct(orange)} %) · grün: ${green} (${pct(green)} %) · vorbefüllt: ${sysCount} Zeichen</p>`;
+  let escapeBlock="";
+  if(payload.e){
+    escapeBlock=
+      '<div style="background:#fffdf8;border:1px solid #ddd5c4;border-radius:10px;padding:18px 22px;margin:0 0 18px;font-family:Iowan Old Style,Palatino,Georgia,serif;font-size:15.5px;line-height:1.55">'+
+        '<div style="font-family:Avenir Next,system-ui,sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#6f675a;margin-bottom:10px">Escape-Room-Daten</div>'+
+        '<div><strong>Name:</strong> '+esc(payload.e.fn||"")+' '+esc(payload.e.ln||"")+'</div>'+
+        '<div><strong>Geburtsdatum:</strong> '+esc(payload.e.bd||"")+'</div>'+
+        '<div><strong>Bestätigungscode:</strong> '+esc(payload.e.cd||"")+'</div>'+
+      '</div>';
+  }
+  const head=`<div class="nmeta">Verfasser:in — ${esc(payload.n||"")}</div>`;
+  return head+escapeBlock+legend+stat+`<div class="analysis">${html}</div>`;
+}
+
+/* ---------------- gemeinsame Krypto-Funktionen werden nur noch lokal genutzt ---------------- */
+
+/* ----------------------- geheime Code-Bildung (Lehrkraft) ----------------------- */
+function _kf(s){const n=(s.match(/\p{L}/gu)||[]).length;return String(n*(0x230+0x220));}
+
+/* ------------------------------ Tracking ------------------------------ */
+let prevValue="";
+let recs=[];          // pro Zeichen: {src:'t'|'p', t:ms}
+let justPasted=false; // wird durch paste/drop gesetzt, nach einem input-Event geleert
+
+function reconcile(newVal,pasted,now){
+  const a=prevValue,b=newVal; const minL=Math.min(a.length,b.length);
+  let p=0; while(p<minL&&a[p]===b[p])p++;
+  let s=0; while(s<minL-p&&a[a.length-1-s]===b[b.length-1-s])s++;
+  const removed=a.length-p-s;
+  const inserted=b.slice(p,b.length-s);
+  const ins=inserted.split("").map(()=>({src:pasted?"p":"t",t:now}));
+  recs.splice(p,removed,...ins);
+  if(recs.length!==b.length){ // Sicherheitsnetz gegen Desync
+    recs=b.split("").map(()=>({src:"t",t:now}));
+  }
+  prevValue=newVal;
+}
+
+function buildPayload(name,text){
+  if(recs.length!==text.length){ // letzte Absicherung
+    const now=Date.now(); recs=text.split("").map(()=>({src:"t",t:now}));
+  }
+  const m=[];
+  for(let i=0;i<text.length;i++){
+    const gap=(i===0)?-1:(recs[i].t-recs[i-1].t);
+    m.push([recs[i].src,gap]);
+  }
+  return {n:name,t:text,m};
+}
+
+/* ------------------------------ UI-Steuerung ------------------------------ */
+const $=(id)=>document.getElementById(id);
+function show(screen){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  $(screen).classList.add("active");
+  const pf=$("pagefoot"); if(pf) pf.style.display=(screen==="screen-teacher")?"none":"block";
+}
+function sanitize(s){return (s||"").replace(/[^\p{L}\p{N}_-]/gu,"_").slice(0,40)||"Datei";}
+function asciiName(s){
+  return (s||"")
+    .replace(/ä/g,"ae").replace(/ö/g,"oe").replace(/ü/g,"ue")
+    .replace(/Ä/g,"Ae").replace(/Ö/g,"Oe").replace(/Ü/g,"Ue").replace(/ß/g,"ss")
+    .normalize("NFKD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^A-Za-z0-9_-]/g,"_").replace(/_+/g,"_").replace(/^_|_$/g,"")
+    .slice(0,40) || "Datei";
+}
+function fileSafe(s){return (s||"").replace(/[\/\\:*?"<>|\u0000-\u001f]/g,"").replace(/\s+/g," ").trim().slice(0,90)||"Datei";}
+function downloadBlob(blob,filename){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+
+let studentVorname="", studentNachname="";
+
+/* Start */
+$("start-btn").addEventListener("click",()=>{
+  const v=$("vorname").value.trim(), n=$("nachname").value.trim();
+  if(!v||!n){$("start-err").textContent="Bitte Vor- und Nachnamen eintragen.";return;}
+  studentVorname=v; studentNachname=n;
+  $("who-name").textContent=v+" "+n;
+  prevValue=""; recs=[]; $("editor").value="";
+  $("charcount").textContent="0";
+  show("screen-editor");
+  setTimeout(()=>$("editor").focus(),40);
+});
+$("vorname").addEventListener("keydown",e=>{if(e.key==="Enter")$("nachname").focus();});
+$("nachname").addEventListener("keydown",e=>{if(e.key==="Enter")$("start-btn").click();});
+$("to-teacher").addEventListener("click",e=>{e.preventDefault();show("screen-teacher");});
+$("back-start").addEventListener("click",e=>{e.preventDefault();show("screen-start");});
+
+/* Editor-Tracking */
+const ed=$("editor");
+function updateCharcount(){
+  let n=0; for(const r of recs){ if(r.src!=="s") n++; }
+  $("charcount").textContent=String(n);
+}
+ed.addEventListener("paste",()=>{justPasted=true;});
+ed.addEventListener("drop",()=>{justPasted=true;});
+ed.addEventListener("input",()=>{
+  reconcile(ed.value,justPasted,Date.now());
+  justPasted=false;
+  updateCharcount();
+});
+
+/* Export: erzeugt NUR die Text-PDF (mit rotem Moodle-Hinweis); die Zeiterfassungs- und
+   Escape-Room-Daten stecken verschlüsselt (als %TRACKDATA) im PDF und sind nur mit dem
+   Feiditor-Code (Anzahl Buchstaben im Vornamen × 1104) durch die Lehrkraft auslesbar. */
+$("export-btn").addEventListener("click",async()=>{
+  const btn=$("export-btn"); const text=ed.value;
+  const name=studentVorname+" "+studentNachname;
+  btn.disabled=true; const old=btn.textContent; btn.textContent="Erzeuge PDF…";
+  try{
+    const payload=buildPayload(name,text);
+    // Escape-Room-Daten zusätzlich (versteckt) ins PDF einbetten
+    if(window.__ESCAPE_DATA__){
+      payload.e={
+        fn:window.__ESCAPE_DATA__.firstName||"",
+        ln:window.__ESCAPE_DATA__.lastName||"",
+        bd:window.__ESCAPE_DATA__.birthDate||"",
+        cd:window.__ESCAPE_DATA__.code||""
+      };
+    }
+    const code=_kf(studentVorname);              // Feiditor-Code: NICHT der Escape-Room-Code
+    const bundle=await aesEncrypt(JSON.stringify(payload),code);
+
+    const pdfName=fileSafe("Text von "+studentVorname)+".pdf";
+
+    // PDF: Text + roter Moodle-Hinweis; Tracking- und Escape-Daten verschlüsselt als %TRACKDATA-Reserve
+    const pdfStr=buildPdf({name,body:text,trackB64:bundle});
+    const u8=new Uint8Array(pdfStr.length);
+    for(let i=0;i<pdfStr.length;i++)u8[i]=pdfStr.charCodeAt(i)&0xFF;
+
+    downloadBlob(new Blob([u8],{type:"application/pdf"}), pdfName);
+
+    btn.textContent="PDF erstellt ✓";
+    setTimeout(()=>{ btn.textContent=old; }, 2200);
+  }catch(err){ alert("Fehler beim Erzeugen der PDF: "+err.message); btn.textContent=old; }
+  finally{ btn.disabled=false; }
+});
+
+/* Lehrkraft: PDF laden + Code */
+let teacherBundle=null;
+function readPdfFile(file){
+  $("teacher-err").textContent=""; $("result").innerHTML="";
+  $("code-area").classList.add("hidden"); teacherBundle=null;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    const bytes=new Uint8Array(fr.result);
+    let str=""; for(let i=0;i<bytes.length;i++) str+=String.fromCharCode(bytes[i]);
+    const mm=str.match(/%TRACKDATA (\S+)/);
+    if(!mm){$("teacher-err").textContent="In dieser PDF wurden keine Tracking-Daten gefunden.";return;}
+    teacherBundle=mm[1];
+    $("code-area").classList.remove("hidden");
+    setTimeout(()=>$("code-input").focus(),40);
+  };
+  fr.onerror=()=>{$("teacher-err").textContent="Datei konnte nicht gelesen werden.";};
+  fr.readAsArrayBuffer(file);
+}
+$("pdf-input").addEventListener("change",e=>{const f=e.target.files[0];if(f)readPdfFile(f);});
+const dropZone=document.querySelector(".drop");
+["dragover","dragenter"].forEach(ev=>dropZone.addEventListener(ev,e=>{e.preventDefault();dropZone.style.borderColor="#8a6a3c";}));
+["dragleave","drop"].forEach(ev=>dropZone.addEventListener(ev,e=>{e.preventDefault();dropZone.style.borderColor="";}));
+dropZone.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];if(f)readPdfFile(f);});
+
+async function showTeacherResult(){
+  const code=$("code-input").value.trim();
+  $("teacher-err").textContent="";
+  if(!teacherBundle)return;
+  try{
+    const json=await aesDecrypt(teacherBundle,code);
+    const p=JSON.parse(json);
+    $("result").innerHTML=renderAnalysis(p);
+  }catch(err){
+    $("result").innerHTML="";
+    $("teacher-err").textContent="Falscher Code.";
+  }
+}
+$("code-btn").addEventListener("click",showTeacherResult);
+$("code-input").addEventListener("keydown",e=>{if(e.key==="Enter")showTeacherResult();});
+
+/* ============================================================
+   Auto-Start aus dem Escape-Room (überspringt die Anmeldung)
+   ============================================================ */
+function buildPrefill(tasks){
+  const lines=[];
+  tasks.forEach((task,i)=>{
+    lines.push("Aufgabe "+(i+1));
+    lines.push(task);
+    for(let k=0;k<8;k++) lines.push("");   // 8 Leerzeilen Lösungsraum
+  });
+  return lines.join("\n");
+}
+(function autoStartFromEscape(){
+  const D=window.__ESCAPE_DATA__;
+  if(!D) return;                                   // ohne Daten: normaler Anmeldebildschirm
+  studentVorname=(D.firstName||"").trim();
+  studentNachname=(D.lastName||"").trim();
+  $("who-name").textContent=(studentVorname+" "+studentNachname).trim();
+  const tasks=Array.isArray(D.tasks)?D.tasks:[];
+  const prefill=tasks.length?buildPrefill(tasks):"";
+  const now=Date.now();
+  ed.value=prefill;
+  prevValue=prefill;
+  recs=prefill.split("").map(()=>({src:"s",t:now}));   // vorbefüllter Text = System (grau, nicht gezählt)
+  updateCharcount();
+  show("screen-editor");
+  // Cursor an den Anfang des ersten Lösungsbereichs setzen (nach Aufgabe 1)
+  setTimeout(()=>{
+    ed.focus();
+    const firstGap=prefill.indexOf("\n\n");
+    const pos=firstGap>=0?firstGap+2:prefill.length;
+    try{ ed.setSelectionRange(pos,pos); }catch(e){}
+  },50);
+})();
+<\/script>
+</body>
+</html>
+
+</script>
+
+<div class="app">
+  <div class="topbar">
+    <div class="topbar-brand">
+      <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V9l7-5 7 5v12"/><path d="M9 21v-6h6v6"/></svg>
+      Marenia · Ordnungskommission
+    </div>
+    <div class="topbar-progress" id="progressSeals"></div>
+  </div>
+
+  <div class="main">
+    <div class="screen" id="screenContainer"></div>
+  </div>
+
+  <div class="site-footer">Copyright Jan-Rickmer Feindt</div>
+</div>
+
+<!-- Reveal overlay -->
+<div class="reveal-overlay" id="revealOverlay">
+  <div class="reveal-card">
+    <div class="reveal-letter" id="revealLetter">E</div>
+    <div class="reveal-caption" id="revealCaption"></div>
+    <div class="reveal-progress" id="revealProgress"></div>
+    <button class="btn btn-primary btn-arrow" id="revealContinue">Weiter</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   KONFIGURATION
+   ============================================================ */
+const CODE_WORD = 'ERHARD';
+const MAGIC = 12;
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let state = {
+  screen:'start',
+  firstName:'', lastName:'', birthDate:'',
+  code:'',
+  solved:[false,false,false,false,false,false],
+  letters:['_','_','_','_','_','_'],
+  mistakes:[null,null,null,null,null,null],
+  attempts:[0,0,0,0,0,0],
+  completedAt:null,
+};
+window.state = state;
+
+function recordAttempt(roomIdx, errorData){
+  state.attempts[roomIdx]++;
+  if(state.attempts[roomIdx] === 1 && errorData && errorData.errors && errorData.errors.length > 0){
+    state.mistakes[roomIdx] = errorData;
+  }
+}
+
+function computeCode(birthDigits){
+  // birthDigits = "TTMMJJJJ"
+  const n = parseInt(birthDigits, 10);
+  return String(n * 1104 + MAGIC);
+}
+
+/* ============================================================
+   MINI PDF WRITER (self-contained, no dependencies)
+   PDF 1.4 · Helvetica + Helvetica-Bold (WinAnsi)
+   ============================================================ */
+const WIN_ANSI_MAP = {
+  'ä':0xE4,'ö':0xF6,'ü':0xFC,'Ä':0xC4,'Ö':0xD6,'Ü':0xDC,'ß':0xDF,
+  '€':0x80,'‚':0x82,'„':0x84,'…':0x85,'†':0x86,'‡':0x87,
+  '‰':0x89,'‹':0x8B,"\u2018":0x91,"\u2019":0x92,"\u201C":0x93,"\u201D":0x94,
+  '•':0x95,'–':0x96,'—':0x97,'™':0x99,'›':0x9B,
+  '¡':0xA1,'«':0xAB,'»':0xBB,'·':0xB7,'×':0xD7,'°':0xB0,
+  '²':0xB2,'³':0xB3,'½':0xBD,'¼':0xBC,'¾':0xBE,'¿':0xBF,
+};
+const FALLBACK_MAP = {
+  '→':'->','←':'<-','↑':'^','↓':'v','✓':'v','✗':'x','✕':'x','★':'*','☆':'*',
+  '\u00A0':' ','\u2009':' ','\u200B':'',
+};
+function encodeWinAnsi(str){
+  const bytes=[];
+  for(const ch of str){
+    const code=ch.charCodeAt(0);
+    if(code<128) bytes.push(code);
+    else if(WIN_ANSI_MAP[ch]!==undefined) bytes.push(WIN_ANSI_MAP[ch]);
+    else if(FALLBACK_MAP[ch]!==undefined){ for(const sub of FALLBACK_MAP[ch]) bytes.push(sub.charCodeAt(0)&0xFF); }
+    else if(code<=255) bytes.push(code);
+    else bytes.push(0x3F);
+  }
+  return bytes;
+}
+const HELV_W=(()=>{
+  const w=new Array(256).fill(500);
+  const widths={' ':278,'!':278,'"':355,'#':556,'$':556,'%':889,'&':667,"'":191,'(':333,')':333,'*':389,'+':584,',':278,'-':333,'.':278,'/':278,'0':556,'1':556,'2':556,'3':556,'4':556,'5':556,'6':556,'7':556,'8':556,'9':556,':':278,';':278,'<':584,'=':584,'>':584,'?':556,'@':1015,'A':667,'B':667,'C':722,'D':722,'E':667,'F':611,'G':778,'H':722,'I':278,'J':500,'K':667,'L':556,'M':833,'N':722,'O':778,'P':667,'Q':778,'R':722,'S':667,'T':611,'U':722,'V':667,'W':944,'X':667,'Y':667,'Z':611,'[':278,'\\':278,']':278,'^':469,'_':556,'`':333,'a':556,'b':556,'c':500,'d':556,'e':556,'f':278,'g':556,'h':556,'i':222,'j':222,'k':500,'l':222,'m':833,'n':556,'o':556,'p':556,'q':556,'r':333,'s':500,'t':278,'u':556,'v':500,'w':722,'x':500,'y':500,'z':500,'{':334,'|':260,'}':334,'~':584,'ä':556,'ö':556,'ü':556,'Ä':667,'Ö':778,'Ü':722,'ß':611,'€':556,'–':556,'—':1000,'«':556,'»':556,'·':278,'°':400,'•':350};
+  for(const k in widths){ const code=WIN_ANSI_MAP[k]!==undefined?WIN_ANSI_MAP[k]:k.charCodeAt(0); if(code<256) w[code]=widths[k]; }
+  return w;
+})();
+function pdfStringWidth(str,fontSize,isBold){
+  const bytes=encodeWinAnsi(str); let total=0;
+  for(const b of bytes) total += (HELV_W[b]||500)*(isBold?1.04:1);
+  return total*fontSize/1000;
+}
+class PdfDoc{
+  constructor(){ this.pages=[]; this.pageW=595; this.pageH=842; this.margin=56; this.cursorY=0; this.currentContent=[]; }
+  startPage(){ this.cursorY=this.pageH-this.margin; this.currentContent=[]; }
+  endPage(){ this.pages.push({content:this.currentContent.join('\n')}); }
+  _escapedString(str){
+    const bytes=encodeWinAnsi(str); let s='(';
+    for(const b of bytes){ if(b===0x28||b===0x29||b===0x5C) s+='\\'; s+=String.fromCharCode(b); }
+    return s+')';
+  }
+  text(str,x,y,fontSize,isBold,color){
+    const fontKey=isBold?'F2':'F1'; const c=color||[0,0,0]; const pdfStr=this._escapedString(str);
+    this.currentContent.push(`${c[0]/255} ${c[1]/255} ${c[2]/255} rg\nBT\n/${fontKey} ${fontSize} Tf\n${x} ${y} Td\n${pdfStr} Tj\nET`);
+  }
+  rect(x,y,w,h,fill,stroke){
+    let cmd='';
+    if(fill) cmd+=`${fill[0]/255} ${fill[1]/255} ${fill[2]/255} rg\n`;
+    if(stroke) cmd+=`${stroke[0]/255} ${stroke[1]/255} ${stroke[2]/255} RG\n`;
+    cmd+=`${x} ${y} ${w} ${h} re\n`;
+    if(fill&&stroke) cmd+='B'; else if(fill) cmd+='f'; else if(stroke) cmd+='S';
+    this.currentContent.push(cmd);
+  }
+  line(x1,y1,x2,y2,color,width){
+    const c=color||[0,0,0];
+    this.currentContent.push(`${c[0]/255} ${c[1]/255} ${c[2]/255} RG\n${width||0.5} w\n${x1} ${y1} m ${x2} ${y2} l S`);
+  }
+  paragraph(str,x,y,width,fontSize,isBold,color,leading){
+    if(!leading) leading=fontSize*1.4;
+    const words=String(str).split(/\s+/); let line=''; let curY=y;
+    for(const word of words){
+      if(!word) continue;
+      const test=line?line+' '+word:word;
+      if(pdfStringWidth(test,fontSize,isBold)<=width){ line=test; }
+      else{
+        if(line){ this.text(line,x,curY,fontSize,isBold,color); curY-=leading; line=word; }
+        else{ this.text(word,x,curY,fontSize,isBold,color); curY-=leading; }
+      }
+    }
+    if(line){ this.text(line,x,curY,fontSize,isBold,color); curY-=leading; }
+    return curY;
+  }
+  build(){
+    const objects=[null,null,
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+      '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>'];
+    const pageIds=[];
+    for(const page of this.pages){
+      objects.push(`<< /Length ${page.content.length} >>\nstream\n${page.content}\nendstream`);
+      const contentId=objects.length;
+      objects.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${this.pageW} ${this.pageH}] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentId} 0 R >>`);
+      pageIds.push(objects.length);
+    }
+    objects[1]=`<< /Type /Pages /Kids [${pageIds.map(i=>i+' 0 R').join(' ')}] /Count ${pageIds.length} >>`;
+    objects[0]='<< /Type /Catalog /Pages 2 0 R >>';
+    let pdf='%PDF-1.4\n%\xC4\xC5\xC6\xC7\n'; const offsets=[0];
+    for(let i=0;i<objects.length;i++){ offsets.push(pdf.length); pdf+=`${i+1} 0 obj\n${objects[i]}\nendobj\n`; }
+    const xrefOffset=pdf.length;
+    pdf+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
+    for(let i=1;i<=objects.length;i++) pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+    pdf+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF\n`;
+    return pdf;
+  }
+  toBase64(trailerComment){ let pdf=this.build(); if(trailerComment) pdf+=trailerComment; return btoa(pdf); }
+}
+
+/* ============================================================
+   LÖSUNGSERLÄUTERUNGEN (für PDF 1, Seite 2)
+   ============================================================ */
+const SOLUTION_NOTES = [
+  { room:'Raum 01 · Warum überhaupt „sozial"?',
+    text:'Die Soziale Marktwirtschaft ist ein „dritter Weg" zwischen zwei Extremen. Sie lehnt die Zentralverwaltungswirtschaft ab, in der der Staat Produktion, Preise und Verteilung zentral plant, ebenso wie den schrankenlosen Laissez-faire-Markt ohne staatlichen Rahmen. Richtig ist deshalb: Marktfreiheit wird mit sozialem Ausgleich verbunden, und der Staat setzt die Spielregeln. Den Begriff prägte Alfred Müller-Armack; politisch durchgesetzt und zum Leitbild „Wohlstand für alle" gemacht hat das Modell Ludwig Erhard.' },
+  { room:'Raum 02 · Das Fundament (Ordoliberalismus)',
+    text:'Die theoretische Grundlage bildet der Ordoliberalismus der Freiburger Schule um Walter Eucken. Sein zentraler Gedanke: Ein freier Markt entsteht und erhält sich nicht von selbst, weil schrankenloser Wettbewerb zur „Vermachtung" (Kartelle, Monopole) führt. Deshalb muss der Staat eine Wettbewerbsordnung bewusst schaffen und schützen. Er setzt dabei nur den Rahmen und greift nicht in einzelne Marktentscheidungen ein – wie ein Schiedsrichter, der die Regeln überwacht, aber nicht selbst mitspielt. Diese Begriffe waren die Lösungen des Lückentextes.' },
+  { room:'Raum 03 · Tragende Säulen I (konstituierende Prinzipien)',
+    text:'Die konstituierenden Prinzipien sind die Dauerregeln, ohne die ein Markt gar nicht funktionieren kann. Zugespitzt sind das: Privateigentum (man verfügt selbst über sein Eigentum), Vertragsfreiheit (Preise und Verträge werden frei ausgehandelt), offene Märkte (freier Markteintritt, keine künstlichen Sperren), Haftung (wer den Nutzen hat, trägt auch den Schaden) und Geldwertstabilität (eine stabile Währung, damit Preise verlässliche Signale geben). In der Zuordnung gehörte zu jedem Prinzip genau ein passendes Alltagsbeispiel.' },
+  { room:'Raum 04 · Tragende Säulen II (regulierende Prinzipien)',
+    text:'Die regulierenden Prinzipien sind Korrektureingriffe: Der Staat greift ein, wenn der Markt zu unerwünschten Ergebnissen führt. Dazu zählen die Monopolaufsicht, die Einkommensumverteilung (etwa über progressive Steuern) und die Korrektur externer Effekte (etwa Umweltabgaben); didaktisch wird hier auch die soziale Sicherung eingeordnet, die das eigentlich „Soziale" der Ordnung ausmacht (sie geht auf Müller-Armacks Gedanken des sozialen Ausgleichs zurück). Alle übrigen Optionen – Privateigentum, Vertragsfreiheit, offene Märkte, Haftung, Geldwertstabilität und das funktionsfähige Preissystem – sind dagegen konstituierende Prinzipien (also die Dauerregeln aus Raum 3) und durften nicht angekreuzt werden. Merke dir die Trennung: konstituierend = die Spielregeln, damit der Markt überhaupt läuft; regulierend = Eingriffe, mit denen der Staat unerwünschte Marktergebnisse korrigiert.' },
+  { room:'Raum 05 · Wer steuert das Haus? (Ordnungs- vs. Prozesspolitik)',
+    text:'Ordnungspolitik setzt den langfristigen Rahmen, die „Spielregeln" der Wirtschaft – etwa Kartellrecht, die verfassungsmäßige Sicherung des Eigentums oder eine unabhängige Zentralbank. Prozesspolitik greift dagegen in den laufenden Wirtschaftsprozess ein – etwa Konjunkturprogramme, gezielte Subventionen oder kurzfristige Steuersenkungen zur Konjunkturbelebung. Die Faustregel zur Einordnung lautet: Wird eine dauerhafte Regel gesetzt (Ordnung) oder in den laufenden Ablauf eingegriffen (Prozess)? Der Ordoliberalismus bevorzugt klar die Ordnungspolitik.' },
+  { room:'Raum 06 · Das Dach & der Schlussstein (angebotsorientierte Politik)',
+    text:'Die angebotsorientierte Politik verbessert die Produktionsbedingungen auf der Angebotsseite: Senkung der Unternehmenssteuern, Bürokratieabbau/Deregulierung, Flexibilisierung des Arbeitsmarktes und Sicherung der Geldwertstabilität. Maßnahmen, die gezielt die Nachfrage ankurbeln (Konjunkturprogramme, höhere Sozialleistungen zur Nachfragebelebung), gehören dagegen zur Nachfrageorientierung und waren nicht anzukreuzen. Entscheidend ist: Die Angebotspolitik ist kein eigenes Wirtschaftssystem, sondern eine prozesspolitische Akzentuierung innerhalb der Sozialen Marktwirtschaft – der Begriff, der als Schlussstein das ganze Haus zusammenhält.' },
+];
+
+const ROOM_LABELS = [
+  'Raum 01 · Warum überhaupt „sozial"?',
+  'Raum 02 · Das Fundament',
+  'Raum 03 · Tragende Säulen I',
+  'Raum 04 · Tragende Säulen II',
+  'Raum 05 · Wer steuert das Haus?',
+  'Raum 06 · Das Dach & der Schlussstein',
+];
+
+/* ============================================================
+   PDF 1 — „Überblick deiner Antworten & Erläuterungen"
+   ============================================================ */
+function fmtDateTime(d){
+  if(!d) d=new Date();
+  const date=d.toLocaleDateString('de-DE');
+  const time=d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});
+  return date+', '+time+' Uhr';
+}
+
+function generateOverviewPdf(){
+  const doc=new PdfDoc();
+  const W=doc.pageW,H=doc.pageH,M=doc.margin; const CW=W-2*M;
+  const PRIMARY=[31,78,95], ACCENT=[169,119,42], RED=[177,68,47], GREEN=[47,125,65], MUTE=[108,120,136], TEXT=[29,39,51];
+
+  function header(title){
+    doc.startPage();
+    doc.rect(0,H-72,W,72,PRIMARY);
+    doc.text(title,M,H-38,18,true,[255,255,255]);
+    doc.text('Politik & Wirtschaft · Soziale Marktwirtschaft · Escape-Room „Stunde Null"',M,H-58,9,false,[214,226,228]);
+    return H-72-22;
+  }
+  function ensure(y,need){ if(y-need<70){ doc.endPage(); return header('Überblick deiner Antworten & Erläuterungen'); } return y; }
+
+  let y=header('Überblick deiner Antworten & Erläuterungen');
+
+  // Pflichthinweis (fett) + Notfall-Tipp (Feiditor) ganz oben
+  doc.rect(M,y-78,CW,78,[248,235,221]);
+  doc.rect(M,y-78,3,78,ACCENT);
+  let yTop=doc.paragraph('Diese Datei musst du bei Moodle in der dafür vorgesehenen Abgabe hochladen, um deinem Lehrer nachzuweisen, dass du den Escape-Room erfolgreich absolviert hast.',
+    M+12,y-16,CW-24,10.5,true,PRIMARY,13.5);
+  doc.paragraph('Notfall-Tipp: Falls du den Link zum digitalen Arbeitsblatt (Feiditor) nicht mehr hast, kannst du diese PDF-Datei auf https://feiditor.janrickmer.de/ hochladen, um den Feiditor mit deinen Aufgaben erneut zu öffnen.',
+    M+12,yTop-4,CW-24,9,false,MUTE,12);
+  y-=78+14;
+
+  // Identifikationsblock
+  const blockH=78;
+  doc.rect(M,y-blockH,CW,blockH,[244,248,249]);
+  doc.rect(M,y-blockH,3,blockH,ACCENT);
+  doc.text('NAME',M+14,y-16,8,true,ACCENT);
+  doc.text(state.firstName+' '+state.lastName,M+14,y-31,13,true,PRIMARY);
+  doc.text('GEBURTSDATUM',M+14,y-49,8,true,ACCENT);
+  doc.text(state.birthDate,M+14,y-63,11,false,TEXT);
+  doc.text('BESTÄTIGUNGSCODE',M+300,y-16,8,true,ACCENT);
+  doc.text(state.code,M+300,y-31,13,true,PRIMARY);
+  doc.text('ABGESCHLOSSEN AM',M+300,y-49,8,true,ACCENT);
+  doc.text(fmtDateTime(state.completedAt),M+300,y-63,11,false,TEXT);
+  y-=blockH+18;
+
+  y=doc.paragraph('Dieses Dokument fasst zusammen, welche Antworten du in jedem Rätselraum beim ersten Versuch gegeben hast. Du hast jeden Raum am Ende erfolgreich gelöst – diese Übersicht zeigt nur, wo es anfangs noch hakte. Auf der zweiten Seite findest du ausführliche Lösungserläuterungen.',
+    M,y,CW,10.5,false,TEXT,14);
+  y-=8;
+
+  const totalErrors=state.mistakes.reduce((a,m)=>a+(m&&m.errors?m.errors.length:0),0);
+  const perfectRooms=state.attempts.filter((a,i)=>a>=1 && (!state.mistakes[i]||!state.mistakes[i].errors||state.mistakes[i].errors.length===0)).length;
+  doc.rect(M,y-34,CW,34,[233,243,234]);
+  doc.rect(M,y-34,3,34,GREEN);
+  doc.text('ÜBERSICHT',M+14,y-13,8,true,GREEN);
+  doc.text(`Räume im ersten Versuch fehlerfrei: ${perfectRooms} von 6   ·   Fehler im ersten Versuch insgesamt: ${totalErrors}`,M+14,y-26,10.5,true,TEXT);
+  y-=48;
+
+  for(let i=0;i<6;i++){
+    y=ensure(y,64);
+    doc.text(ROOM_LABELS[i],M,y,12.5,true,PRIMARY);
+    doc.line(M,y-4,M+CW,y-4,ACCENT,0.8);
+    y-=18;
+    const attempts=state.attempts[i]; const m=state.mistakes[i];
+    const attemptsLabel=attempts===1?'1 Versuch':attempts+' Versuche';
+    if(!m||!m.errors||m.errors.length===0){
+      y=doc.paragraph('Fehlerfrei beim ersten Versuch gelöst. ('+attemptsLabel+')',M,y,CW,10.5,true,GREEN,14); y-=8; continue;
+    }
+    y=doc.paragraph('Benötigt: '+attemptsLabel+'. Beim ersten Versuch war Folgendes nicht korrekt:',M,y,CW,10.5,false,MUTE,14); y-=4;
+    for(const err of m.errors){
+      y=ensure(y,52);
+      doc.text('•',M,y,11,true,RED);
+      if(err.kind==='mc_falsch'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Deine Wahl: '+err.wrongAnswer,M+14,y,CW-14,10,false,RED,13);
+        y=doc.paragraph('Richtig: '+err.correctAnswer,M+14,y,CW-14,10,true,GREEN,13);
+      } else if(err.kind==='luecke_falsch'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Deine Wahl: '+err.wrongAnswer+'   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='zuordnung_falsch'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Du zugeordnet: '+err.wrongAnswer+'   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='falsch_gewaehlt'){
+        y=doc.paragraph('Falsch ausgewählt: "'+err.item+'"',M+14,y,CW-14,10.5,true,TEXT,13);
+        if(err.explanation) y=doc.paragraph('→ '+err.explanation,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='uebersehen'){
+        y=doc.paragraph('Übersehen (gehörte dazu): "'+err.item+'"',M+14,y,CW-14,10.5,true,TEXT,13);
+        if(err.explanation) y=doc.paragraph('→ '+err.explanation,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='falsch_einsortiert'){
+        y=doc.paragraph('"'+err.item+'"',M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Du einsortiert: '+err.wrongAnswer+'   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      } else if(err.kind==='falsche_eingabe'){
+        y=doc.paragraph(err.item,M+14,y,CW-14,10.5,true,TEXT,13);
+        y=doc.paragraph('Deine Eingabe: "'+err.wrongAnswer+'"   ·   Richtig: '+err.correctAnswer,M+14,y,CW-14,10,false,MUTE,13);
+      }
+      y-=5;
+    }
+    y-=10;
+  }
+
+  y=ensure(y,40);
+  doc.line(M,y,M+CW,y,[200,200,200],0.4); y-=14;
+  doc.text('Bestätigungscode für Moodle: '+state.code,M,y,10,true,PRIMARY);
+  y-=22;
+  doc.text('Copyright Jan-Rickmer Feindt',M,y,8.5,false,MUTE);
+  doc.endPage();
+
+  /* ---- Seite 2: Lösungserläuterungen ---- */
+  let y2=header('Lösungserläuterungen');
+  y2=doc.paragraph('Hier werden die richtigen Lösungen der sechs Rätselräume noch einmal genauer erklärt. Nutze diese Seite, um den Stoff der Sitzung zu vertiefen.',M,y2,CW,10.5,false,TEXT,14);
+  y2-=10;
+  function ensure2(y,need){ if(y-need<70){ doc.endPage(); return header('Lösungserläuterungen'); } return y; }
+  for(const note of SOLUTION_NOTES){
+    y2=ensure2(y2,90);
+    doc.text(note.room,M,y2,12.5,true,PRIMARY);
+    doc.line(M,y2-4,M+CW,y2-4,ACCENT,0.8);
+    y2-=18;
+    y2=doc.paragraph(note.text,M,y2,CW,10.5,false,TEXT,14.5);
+    y2-=14;
+  }
+  y2=ensure2(y2,30);
+  doc.line(M,y2,M+CW,y2,[200,200,200],0.4); y2-=14;
+  doc.text('Copyright Jan-Rickmer Feindt',M,y2,8.5,false,MUTE);
+  doc.endPage();
+
+  // Versteckte Rekonstruktionsdaten für den Standalone-Feiditor (nach %%EOF, von Viewern ignoriert).
+  // Enthält: Vorname, Nachname, die sechs Feiditor-Aufgaben und die beiden roten Feldtexte.
+  const escData={ v:state.firstName, n:state.lastName, t:REFLECT_TASKS.slice(0,6), r:RED_FIELDS };
+  let escB64='';
+  try{ escB64=btoa(unescape(encodeURIComponent(JSON.stringify(escData)))); }catch(e){ escB64=''; }
+  const trailer=escB64?('\n%ESCAPEDATA '+escB64+'\n'):'';
+  return doc.toBase64(trailer);
+}
+
+/* ============================================================
+   PDF 2 — Reflexions-Datei
+   ============================================================ */
+const REFLECT_TASKS = [
+  'Erkläre in eigenen Worten, warum sich Marenia weder für die Zentralverwaltungswirtschaft (der Staat plant alles) noch für den schrankenlosen Markt (gar keine Regeln) entschieden hat. (Bibliotheksraum 1)',
+  'Fasse mit eigenen Worten zusammen, was der Ordoliberalismus unter einer „Wettbewerbsordnung" versteht und welche Rolle der Staat dabei spielt. Erkläre dabei das Bild vom „Schiedsrichter". (Bibliotheksraum 2)',
+  'Wähle zwei konstituierende Prinzipien aus und erkläre sie an je einem selbst gewählten Beispiel. (Bibliotheksraum 3)',
+  'Vergleiche konstituierende und regulierende Prinzipien: Worin unterscheiden sie sich grundsätzlich? Nenne zu jeder Gruppe ein Beispiel. (Bibliotheksräume 3 und 4)',
+  'Erkläre den Unterschied zwischen Ordnungspolitik und Prozesspolitik an je einem eigenen Beispiel. (Bibliotheksraum 5)',
+  'Begründe, warum die angebotsorientierte Politik kein eigenes Wirtschaftssystem ist, sondern eine „Akzentuierung innerhalb" der Sozialen Marktwirtschaft. (Bibliotheksraum 6)',
+  'Bearbeite nun auf Moodle die Aufgabe „Text verfassen …".',
+  'Lade diese Reflexions-Datei in der dafür vorgesehenen Abgabe bei Moodle hoch.',
+];
+
+// Texte der beiden roten Felder des Feiditors – exakt wie im eingebetteten Feiditor.
+// Werden (zusammen mit Name & Aufgaben) versteckt in die Überblick-PDF eingebettet,
+// damit der Standalone-Feiditor sie bei einem PDF-Upload rekonstruieren kann.
+const RED_FIELDS = [
+  'Wandle diesen Text nun in eine PDF-Datei um und lade diese PDF-Datei in der korrekten Abgabe auf Moodle hoch.',
+  'Aufgabe 7: Nachdem du die Lösungen zu Aufgaben 1-6 auf Moodle hochgeladen hast, bearbeitest du die auf Moodle verlinkte Aufgabe "Text verfassen ..."',
+];
+
+function generateReflexionPdf(){
+  const doc=new PdfDoc();
+  const W=doc.pageW,H=doc.pageH,M=doc.margin; const CW=W-2*M;
+  const PRIMARY=[31,78,95], ACCENT=[169,119,42], MUTE=[108,120,136], TEXT=[29,39,51], LINE=[205,205,205];
+
+  function header(){
+    doc.startPage();
+    doc.rect(0,H-72,W,72,PRIMARY);
+    doc.text('Reflexion — Soziale Marktwirtschaft',M,H-38,18,true,[255,255,255]);
+    doc.text('Escape-Room „Stunde Null" · Bearbeite die Aufgaben in eigenen Worten',M,H-58,9,false,[214,226,228]);
+    return H-72-22;
+  }
+  function ensure(y,need){ if(y-need<70){ doc.endPage(); return header(); } return y; }
+
+  let y=header();
+
+  // Identifikationsblock: Name, Geburtsdatum, Zeitpunkt der Vollendung
+  const bH=58;
+  doc.rect(M,y-bH,CW,bH,[244,248,249]);
+  doc.rect(M,y-bH,3,bH,ACCENT);
+  doc.text('NAME',M+14,y-15,8,true,ACCENT);
+  doc.text(state.firstName+' '+state.lastName,M+14,y-30,12.5,true,PRIMARY);
+  doc.text('GEBURTSDATUM',M+260,y-15,8,true,ACCENT);
+  doc.text(state.birthDate,M+260,y-30,11,false,TEXT);
+  doc.text('ESCAPE-ROOM ABGESCHLOSSEN AM',M+14,y-46,8,true,ACCENT);
+  doc.text(fmtDateTime(state.completedAt),M+200,y-46,10,false,TEXT);
+  y-=bH+16;
+
+  y=doc.paragraph('Diese Reflexion vertieft die Inhalte aus den Bibliotheksräumen. Beantworte die folgenden Aufgaben in eigenen Worten – stichpunktartig oder in ganzen Sätzen.',
+    M,y,CW,10.5,false,TEXT,14);
+  y-=8;
+
+  for(let i=0;i<REFLECT_TASKS.length;i++){
+    const isLast=i===REFLECT_TASKS.length-1;
+    const isSecondLast=i===REFLECT_TASKS.length-2;
+    y=ensure(y,isLast||isSecondLast?70:120);
+    // Aufgabe Nummer + Text
+    doc.text('Aufgabe '+(i+1),M,y,11,true,ACCENT);
+    y-=15;
+    y=doc.paragraph(REFLECT_TASKS[i],M,y,CW,11,true,TEXT,15);
+    y-=8;
+    if(isLast || isSecondLast){
+      // Moodle-Aufgaben: kleine Checkbox statt Schreiblinien
+      doc.rect(M,y-12,12,12,null,MUTE);
+      doc.text('erledigt',M+20,y-10,9.5,false,MUTE);
+      y-=26;
+    } else {
+      // Schreiblinien
+      const linesCount=4;
+      for(let l=0;l<linesCount;l++){ y-=20; doc.line(M,y,M+CW,y,LINE,0.5); }
+      y-=14;
+    }
+  }
+
+  y=ensure(y,30);
+  doc.line(M,y,M+CW,y,LINE,0.4); y-=14;
+  doc.text('Copyright Jan-Rickmer Feindt',M,y,8.5,false,MUTE);
+  doc.endPage();
+  return doc.toBase64();
+}
+
+/* ============================================================
+   DOWNLOAD-HELFER
+   ============================================================ */
+function translit(s){
+  return (s||'').replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+    .replace(/Ä/g,'Ae').replace(/Ö/g,'Oe').replace(/Ü/g,'Ue').replace(/ß/g,'ss')
+    .replace(/[^a-zA-Z0-9-]/g,'');
+}
+function downloadPdfBase64(b64,filename){
+  const binary=atob(b64); const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+  const blob=new Blob([bytes],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a'); link.href=url; link.download=filename;
+  document.body.appendChild(link); link.click(); document.body.removeChild(link);
+  setTimeout(()=>URL.revokeObjectURL(url),1200);
+}
+window.downloadOverviewPDF=()=>{
+  try{
+    const b64=generateOverviewPdf();
+    const name=translit(state.lastName)||'Schueler';
+    const filename=`Ueberblick_${name}_${state.code}.pdf`;
+    const binary=atob(b64); const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    const blob=new Blob([bytes],{type:'application/pdf'});
+    const url=URL.createObjectURL(blob);
+    // 1) PDF in neuem Tab öffnen (die Abschlussseite bleibt im Ausgangstab bestehen)
+    window.open(url,'_blank');
+    // 2) Dieselbe Datei zusätzlich herunterladen
+    const link=document.createElement('a');
+    link.href=url; link.download=filename;
+    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    // Object-URL erst spät freigeben, damit neuer Tab und Download sicher fertig laden
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(e){ console.error(e); alert('Konnte die Datei nicht erzeugen: '+e.message); }
+};
+window.downloadReflexionPDF=()=>{
+  try{
+    const b64=generateReflexionPdf();
+    const name=translit(state.lastName)||'Schueler';
+    downloadPdfBase64(b64,`Reflexion_${name}_${state.code}.pdf`);
+  }catch(e){ console.error(e); alert('Konnte die Datei nicht erzeugen: '+e.message); }
+};
+window.openFeiditor=()=>{
+  try{
+    const tplEl=document.getElementById('feiditor-src');
+    if(!tplEl){ alert('Der Feiditor konnte nicht geladen werden.'); return; }
+    // Eingebetteten Feiditor-Quelltext holen und die escapten Script-End-Tags wiederherstellen
+    let html=tplEl.textContent.replace(/<\\\/script>/gi,'<\/script>');
+    // Escape-Room-Daten + die ersten sechs Aufgaben in den Feiditor injizieren (vor </head>)
+    const data={
+      firstName: state.firstName,
+      lastName:  state.lastName,
+      birthDate: state.birthDate,
+      code:      state.code,
+      tasks:     REFLECT_TASKS.slice(0,6)
+    };
+    const inject='<script>window.__ESCAPE_DATA__='+JSON.stringify(data).replace(/</g,'\\u003c')+';<\/script>';
+    if(html.indexOf('</head>')!==-1) html=html.replace('</head>', inject+'\n</head>');
+    else html=inject+html;
+    // Per document.write öffnen, damit der sichere Kontext (crypto.subtle) erhalten bleibt.
+    // Ein Blob-URL würde den secure context verlieren -> Verschlüsselung schlägt fehl.
+    const win=window.open('','_blank');
+    if(!win){ alert('Bitte erlaube Pop-ups für diese Seite, damit sich das digitale Arbeitsblatt öffnen kann.'); return; }
+    win.document.open();
+    win.document.write(html);
+    win.document.close();
+  }catch(e){ console.error(e); alert('Das digitale Arbeitsblatt konnte nicht geöffnet werden: '+e.message); }
+};
+window.copyCode=async()=>{
+  try{ await navigator.clipboard.writeText(state.code);
+    const d=document.getElementById('copyDesc'); if(d) d.innerHTML='Code in die Zwischenablage kopiert. Trage ihn in die Moodle-Aufgabe ein.';
+  }catch(e){ const d=document.getElementById('copyDesc'); if(d) d.innerHTML='Code: <strong class="font-mono">'+state.code+'</strong> – bitte manuell kopieren.'; }
+};
+
+/* ============================================================
+   DOM-REFS & SEALS
+   ============================================================ */
+const root=document.getElementById('screenContainer');
+const sealsBox=document.getElementById('progressSeals');
+
+function renderSeals(){
+  sealsBox.innerHTML='';
+  for(let i=0;i<6;i++){
+    const lib=document.createElement('div'); lib.className='seal library';
+    const sc=state.screen;
+    const isLibActive = (sc==='lib'+(i+1)) || (sc==='lib2alt' && i===1);
+    if(isLibActive) lib.classList.add('active');
+    else if(state.solved[i] || sc==='room'+(i+1)
+      || (sc.startsWith('room') && parseInt(sc.slice(4))>i+1)
+      || (sc.startsWith('lib') && parseInt((sc.match(/\d+/)||[0])[0])>i+1)
+      || sc==='final') lib.classList.add('visited');
+    sealsBox.appendChild(lib);
+
+    const s=document.createElement('div'); s.className='seal';
+    if(state.solved[i]){ s.classList.add('solved'); s.textContent=CODE_WORD[i]; }
+    else if(state.screen==='room'+(i+1)){ s.classList.add('active'); s.textContent=i+1; }
+    else s.textContent=i+1;
+    sealsBox.appendChild(s);
+  }
+}
+
+/* ============================================================
+   SCREEN: START (Name + Geburtsdatum)
+   ============================================================ */
+function renderStart(){
+  state.screen='start'; renderSeals();
+  root.innerHTML=`
+    <div class="kicker">Politik &amp; Wirtschaft · Soziale Marktwirtschaft · Selbsterarbeitung</div>
+    <h1 class="title-mega">Stunde Null<br><em>Marenia</em></h1>
+    <p class="lede">Bevor du in die Ordnungskommission aufgenommen wirst, brauchen wir deine Anmeldung.</p>
+
+    <div class="card card-accent" style="max-width:640px;">
+      <h3 style="font-size:21px; margin-bottom:14px;">Anmeldung zur Kommission</h3>
+      <p class="text-mute" style="margin-bottom:20px; font-size:14.5px;">
+        Trage deinen vollen Namen und dein Geburtsdatum ein. Beides erscheint später auf deinen beiden Dateien für Moodle. Dein persönlicher Bestätigungscode wird daraus errechnet.
+      </p>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+        <div>
+          <label class="field-label" for="firstNameInput">Vorname</label>
+          <input id="firstNameInput" class="text-input" type="text" autocomplete="given-name" maxlength="40"
+                 onkeydown="if(event.key==='Enter') document.getElementById('lastNameInput').focus()">
+        </div>
+        <div>
+          <label class="field-label" for="lastNameInput">Nachname</label>
+          <input id="lastNameInput" class="text-input" type="text" autocomplete="family-name" maxlength="40"
+                 onkeydown="if(event.key==='Enter') document.getElementById('birthInput').focus()">
+        </div>
+      </div>
+      <div style="max-width:260px;">
+        <label class="field-label" for="birthInput">Geburtsdatum (TT.MM.JJJJ)</label>
+        <input id="birthInput" class="text-input" type="text" inputmode="numeric" maxlength="10" placeholder="TT.MM.JJJJ"
+               oninput="maskBirth(this)" onkeydown="if(event.key==='Enter') submitStart()">
+      </div>
+      <div id="startError" class="input-error"></div>
+      <div class="btn-row">
+        <button class="btn btn-primary btn-arrow" onclick="submitStart()">Weiter zum Auftrag</button>
+      </div>
+    </div>
+  `;
+  setTimeout(()=>document.getElementById('firstNameInput')?.focus(),100);
+}
+window.maskBirth=(el)=>{
+  let v=el.value.replace(/[^0-9]/g,'').slice(0,8);
+  let out=v;
+  if(v.length>4) out=v.slice(0,2)+'.'+v.slice(2,4)+'.'+v.slice(4);
+  else if(v.length>2) out=v.slice(0,2)+'.'+v.slice(2);
+  el.value=out;
+};
+window.submitStart=()=>{
+  const fn=document.getElementById('firstNameInput').value.trim();
+  const ln=document.getElementById('lastNameInput').value.trim();
+  const bd=document.getElementById('birthInput').value.trim();
+  const err=document.getElementById('startError');
+  function showErr(msg){ err.style.display='block'; err.textContent=msg; }
+  if(fn.length<2||ln.length<2){ showErr('Bitte trage deinen vollen Vor- und Nachnamen ein (jeweils mindestens 2 Zeichen).'); return; }
+  const m=bd.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if(!m){ showErr('Bitte gib dein Geburtsdatum im Format TT.MM.JJJJ ein (z. B. 07.03.2006).'); return; }
+  const dd=parseInt(m[1],10), mm=parseInt(m[2],10), yyyy=parseInt(m[3],10);
+  if(dd<1||dd>31||mm<1||mm>12||yyyy<1900||yyyy>2025){ showErr('Das Geburtsdatum scheint nicht zu stimmen. Bitte prüfe Tag, Monat und Jahr.'); return; }
+  state.firstName=fn; state.lastName=ln; state.birthDate=bd;
+  const digits=m[1]+m[2]+m[3];
+  state.code=computeCode(digits);
+  renderIntro();
+};
+
+/* ============================================================
+   SCREEN: INTRO
+   ============================================================ */
+function renderIntro(){
+  state.screen='intro'; renderSeals();
+  root.innerHTML=`
+    <div class="kicker">Der Auftrag</div>
+    <h1 class="title-mega">Willkommen,<br><em>${escapeHtml(state.firstName)}</em></h1>
+    <p class="lede">Sechs Bibliotheksräume. Sechs Rätsel. Ein Gründungsplan.<br>Bau Stockwerk für Stockwerk das „Haus der Sozialen Marktwirtschaft".</p>
+
+    <div class="card card-accent">
+      <div class="briefing">
+        <span class="speaker">Vorsitz der Ordnungskommission</span>
+        Marenia ist nach langen Kriegsjahren befreit. Die Fabriken stehen still, das Geld ist nichts mehr wert, auf den Schwarzmärkten wird getauscht statt gehandelt. Die unterstützenden Mächte haben beim Wiederaufbau geholfen – aber an eine Bedingung geknüpft: Die neue Wirtschaft soll weder zur Kommandowirtschaft der Kriegsjahre zurückkehren noch zum schrankenlosen Markt werden, in dem die Stärksten alles bestimmen. Das Ziel heißt: <strong>Soziale Marktwirtschaft</strong>.
+      </div>
+      <p class="body-lg" style="margin-top:16px;">
+        Du bist neu berufenes Mitglied der Kommission. Deine Aufgabe ist nicht, einzelne Fabriken zu reparieren, sondern die <strong>Spielregeln</strong> festzulegen, nach denen die Wirtschaft künftig läuft. Vor jedem Rätselraum betrittst du einen <strong style="color:var(--primary)">Bibliotheksraum</strong> mit dem nötigen Wissen.
+        <strong>Sobald du den Rätselraum betrittst, kommst du nicht mehr in die Bibliothek zurück</strong> – lies aufmerksam und mach dir Notizen.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:18px; margin-bottom:10px;">So läuft es ab</h3>
+      <ul class="muted-list">
+        <li>Jeder gelöste Raum schaltet einen Buchstaben frei. Sammle alle sechs zum Lösungswort.</li>
+        <li>Falsche Eingaben werden markiert und erklärt – du darfst es erneut versuchen.</li>
+        <li>Am Ende erhältst du deinen Bestätigungscode und zwei Dateien, die du in Moodle hochlädst.</li>
+      </ul>
+      <div style="margin-top:14px; font-size:13.5px; color:var(--ink-mute);">
+        Angemeldet als <strong style="color:var(--ink)">${escapeHtml(state.firstName)} ${escapeHtml(state.lastName)}</strong> · geb. ${escapeHtml(state.birthDate)}
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-primary btn-arrow" onclick="goLibrary(1)">Erste Bibliothek betreten</button>
+    </div>
+  `;
+}
+function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ============================================================
+   ROOM HEADER / FOOTER (shared)
+   ============================================================ */
+function roomHeader(room){
+  return `
+    <div class="room-header">
+      <div class="room-number">${String(room.id).padStart(2,'0')}</div>
+      <div class="room-meta">
+        <div class="room-location">${room.location}</div>
+        <div class="room-name">${room.name}</div>
+      </div>
+    </div>
+    <div class="card card-accent"><div class="briefing"><span class="speaker">Gründungsplan · Abschnitt ${String(room.id).padStart(2,'0')}</span>${room.briefing}</div></div>
+    <p class="body-lg" style="margin:8px 0 0;"><strong style="color:var(--accent); font-family:var(--font-mono); font-size:11px; letter-spacing:0.16em;">DEINE AUFGABE</strong></p>
+    <p class="body-lg">${room.task}</p>
+  `;
+}
+function roomFooter(hintText,checkFn){
+  return `
+    <div id="statusBox"></div>
+    <div id="hintBox" class="hint-box"><span class="label">Hinweis</span>${hintText}</div>
+    <div class="btn-row"><button class="btn btn-primary" onclick="${checkFn}">Prüfen</button><button class="hint-btn" onclick="showHint()">Hinweis anzeigen</button></div>
+  `;
+}
+window.showHint=()=>{ const h=document.getElementById('hintBox'); if(h) h.classList.add('show'); };
+function showStatus(type,label,msg){
+  const box=document.getElementById('statusBox'); if(!box) return;
+  box.innerHTML=`<div class="status status-${type} show"><span class="label">${label}</span>${msg}</div>`;
+}
+
+/* ============================================================
+   LIBRARIES
+   ============================================================ */
+const LIBRARIES=[
+  // --- Bibliothek 1 ---
+  { id:1, location:'Marenia · Ministerium für Wiederaufbau', name:'Bibliothek der Grundentscheidung',
+    intro:'Warum heißt das Ziel ausgerechnet „soziale" Marktwirtschaft – und welche Alternativen wurden verworfen?',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Marenia am Scheideweg</div>
+        <p>Nach dem Krieg liegt die Wirtschaft am Boden. Zwei Wege stehen zur Wahl – und beide haben einen Haken:</p>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Extrem 1</div>
+            <div class="lib-card-title">Zentralverwaltungswirtschaft</div>
+            <div class="lib-card-body">Der Staat plant <em>alles</em>: was produziert wird, zu welchen Preisen, für wen. Problem: Die Freiheit wird erstickt, und niemand findet die besten Lösungen.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Extrem 2</div>
+            <div class="lib-card-title">Schrankenloser Markt (Laissez-faire)</div>
+            <div class="lib-card-body">Der Markt regelt alles allein, der Staat hält sich völlig heraus. Problem: Die Stärksten setzen sich durch, Schwache bleiben ungeschützt.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Der dritte Weg</div>
+        <p>Die Soziale Marktwirtschaft verbindet beide Seiten: <strong>so viel Markt wie möglich, so viel Staat wie nötig</strong>. Es gibt freie Märkte und Wettbewerb – aber der Staat sorgt mit Regeln für einen fairen Rahmen und für einen <strong>sozialen Ausgleich</strong>, der die Schwächeren schützt.</p>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Zwei Namen, die du dir merken solltest</div>
+        <p>Hinter dem Modell stehen zwei Personen mit klar unterschiedlichen Rollen – der Denker und der Umsetzer:</p>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Alfred Müller-Armack (1901–1978) — der Denker</div>
+        <p>Müller-Armack war Nationalökonom und Kultursoziologe. In seinem Buch <em>„Wirtschaftslenkung und Marktwirtschaft"</em> (1947) verwendete er erstmals öffentlich den Begriff <strong>„Soziale Marktwirtschaft"</strong> – er gilt deshalb als der <strong>Namensgeber</strong>. Sein zentraler Gedanke war eine Synthese: ein freier Markt mit echtem Wettbewerb <em>plus</em> ein bewusster <strong>sozialer Ausgleich</strong>, der die Schwächeren absichert. Er bezeichnete dies als „dritten Weg" zwischen Liberalismus und Lenkungswirtschaft. Ab 1952 war er im Bundeswirtschaftsministerium tätig, zuletzt als <strong>Staatssekretär</strong> unter Erhard – er hat die Soziale Marktwirtschaft also nicht nur theoretisch entworfen, sondern auch ihre praktische Ausgestaltung mitgeprägt.</p>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Ludwig Erhard (1897–1977) — der Umsetzer</div>
+        <p>Erhard war Wirtschaftswissenschaftler und Politiker. Als verantwortlicher Direktor für Wirtschaft im damaligen Westdeutschland setzte er am <strong>20. Juni 1948</strong> die <strong>Währungsreform</strong> (Einführung der D-Mark) durch – und gab zeitgleich die meisten Preise frei. Dieser Doppelschritt gilt als praktische <strong>Geburtsstunde der Sozialen Marktwirtschaft</strong>. Anschließend war Erhard von <strong>1949 bis 1963 Bundeswirtschaftsminister</strong> unter Konrad Adenauer und führte das Modell in die Praxis; mit dem Schlagwort <strong>„Wohlstand für alle"</strong> (Buchtitel 1957) machte er es zum Leitbild der jungen Bundesrepublik. Von 1963 bis 1966 war er <strong>Bundeskanzler</strong>. Sein Name ist eng mit dem deutschen „Wirtschaftswunder" der Nachkriegszeit verbunden.</p>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Die Arbeitsteilung</div>
+        <p>Vereinfacht: <strong>Müller-Armack lieferte die Formel</strong> (Markt + sozialer Ausgleich = Soziale Marktwirtschaft), <strong>Erhard setzte sie politisch durch</strong>. Das theoretische Fundament dazu kam aus einer dritten Richtung – der Freiburger Schule um Walter Eucken (mehr dazu im nächsten Raum).</p>
+      </div>`,
+    target:'Raum 01 · Die Grundentscheidung' },
+
+  // --- Bibliothek 2 wird gesondert gerendert (Video) ---
+  null,
+
+  // --- Bibliothek 3 ---
+  { id:3, location:'Marenia · Kommissionssaal', name:'Bibliothek der tragenden Säulen I',
+    intro:'Welche Regeln müssen IMMER gelten, damit ein Markt überhaupt funktioniert? Das sind die konstituierenden Prinzipien.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Die Dauerregeln des Marktes</div>
+        <p>Walter Eucken nannte die Regeln, die einen funktionierenden Markt überhaupt erst möglich machen, die <strong>konstituierenden Prinzipien</strong>. Sie sind das tragende Gerüst – fällt eine Säule weg, gerät die ganze Ordnung ins Wanken. Wir konzentrieren uns auf die fünf wichtigsten:</p>
+      </div>
+      <div class="lib-section">
+        <table class="lib-table">
+          <thead><tr><th>Prinzip</th><th>Was es bedeutet</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Privateigentum</strong></td><td>Jede:r darf Eigentum besitzen und selbst darüber verfügen.</td></tr>
+            <tr><td><strong>Vertragsfreiheit</strong></td><td>Käufer und Verkäufer handeln Preise und Verträge frei aus.</td></tr>
+            <tr><td><strong>Offene Märkte</strong></td><td>Jeder darf neu in den Markt eintreten; keine künstlichen Zutrittssperren.</td></tr>
+            <tr><td><strong>Haftung</strong></td><td>Wer den Nutzen (Gewinn) hat, muss auch den Schaden (Verlust) tragen.</td></tr>
+            <tr><td><strong>Geldwertstabilität</strong></td><td>Die Währung bleibt stabil, damit Preise verlässliche Signale geben.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Der Grundgedanke dahinter</div>
+        <p>All diese Prinzipien dienen einem Ziel: einem <strong>funktionsfähigen Preissystem</strong>. Nur wenn Preise frei und unverzerrt zustande kommen, lenken sie die Wirtschaft sinnvoll – sie zeigen an, was knapp ist und was gebraucht wird.</p>
+      </div>`,
+    target:'Raum 03 · Die tragenden Säulen I' },
+
+  // --- Bibliothek 4 ---
+  { id:4, location:'Marenia · Kommissionssaal', name:'Bibliothek der tragenden Säulen II',
+    intro:'Ein Markt nach Regeln ist gut – aber er liefert nicht von allein gerechte Ergebnisse. Wo muss der Staat korrigierend eingreifen?',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Wenn der Markt korrigiert werden muss</div>
+        <p>Neben den Dauerregeln (Raum 3) gibt es die <strong>regulierenden Prinzipien</strong>. Sie greifen dort ein, wo ein freier Markt zu Ergebnissen führt, die man nicht will. Hier zeigt sich das eigentlich <em>Soziale</em> der Sozialen Marktwirtschaft.</p>
+      </div>
+      <div class="lib-section">
+        <table class="lib-table">
+          <thead><tr><th>Regulierendes Prinzip</th><th>Beispiel</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Monopolaufsicht</strong></td><td>Der Staat verhindert, dass einzelne Konzerne den Wettbewerb ausschalten.</td></tr>
+            <tr><td><strong>Einkommensumverteilung</strong></td><td>Über z. B. progressive Steuern werden große Einkommensunterschiede abgemildert.</td></tr>
+            <tr><td><strong>Korrektur externer Effekte</strong></td><td>Wer die Umwelt schädigt, zahlt dafür (z. B. Umweltabgaben).</td></tr>
+            <tr><td><strong>Soziale Sicherung</strong></td><td>Sozialversicherungen schützen bei Krankheit, Alter und Arbeitslosigkeit.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Merke den Unterschied</div>
+        <p><strong>Konstituierend</strong> = die Regeln, damit der Markt überhaupt läuft (Privateigentum, Vertragsfreiheit, offene Märkte, Haftung, Geldwertstabilität).<br>
+        <strong>Regulierend</strong> = der Staat korrigiert unerwünschte Ergebnisse (Monopolaufsicht, Umverteilung, externe Effekte, soziale Sicherung).</p>
+      </div>`,
+    target:'Raum 04 · Die tragenden Säulen II' },
+
+  // --- Bibliothek 5 ---
+  { id:5, location:'Marenia · Kommissionssaal', name:'Bibliothek der Steuerung',
+    intro:'Wie genau steuert der Staat die Wirtschaft? Hier liegt der begriffliche Schlüssel der ganzen Einheit.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Zwei Arten, in die Wirtschaft einzugreifen</div>
+        <div class="lib-grid">
+          <div class="lib-card">
+            <div class="lib-card-sub">Setzt die Regeln</div>
+            <div class="lib-card-title">Ordnungspolitik</div>
+            <div class="lib-card-body">Der Staat gestaltet den langfristigen <strong>Rahmen</strong>: die „Spielregeln" der Wirtschaft. Beispiele: Kartellrecht, Eigentumsordnung, eine unabhängige Zentralbank.</div>
+          </div>
+          <div class="lib-card">
+            <div class="lib-card-sub">Greift in den Ablauf ein</div>
+            <div class="lib-card-title">Prozesspolitik</div>
+            <div class="lib-card-body">Der Staat greift in den <strong>laufenden</strong> Wirtschaftsprozess ein. Beispiele: Konjunkturprogramme, gezielte Subventionen, kurzfristige Steuersenkungen.</div>
+          </div>
+        </div>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Die Faustregel zum Einordnen</div>
+        <p>Frag dich bei jeder Maßnahme: <em>Wird eine dauerhafte Regel gesetzt</em> (→ Ordnungspolitik) <em>oder in den laufenden Ablauf eingegriffen</em> (→ Prozesspolitik)? Der Ordoliberalismus bevorzugt eindeutig die <strong>Ordnungspolitik</strong>: erst die Regeln, dann das Spiel.</p>
+      </div>`,
+    target:'Raum 05 · Die Steuerung' },
+
+  // --- Bibliothek 6 ---
+  { id:6, location:'Marenia · Ministerium für Wiederaufbau', name:'Bibliothek des Dachs',
+    intro:'Letzte Bibliothek. Eine wichtige wirtschaftspolitische Akzentuierung – und der Schlussstein des Hauses.',
+    content:`
+      <div class="lib-section">
+        <div class="lib-section-title">Angebotsorientierte Politik</div>
+        <p>Eine bestimmte Richtung der Prozesspolitik setzt an der <strong>Angebotsseite</strong> an: Sie will die <strong>Produktionsbedingungen</strong> der Unternehmen verbessern, damit mehr und günstiger produziert wird. Typische Instrumente:</p>
+        <ul class="lib-bullets">
+          <li><strong>Steuer- und Abgabensenkung</strong> (vor allem für Unternehmen)</li>
+          <li><strong>Deregulierung / Bürokratieabbau</strong></li>
+          <li><strong>Flexibilisierung des Arbeitsmarktes</strong></li>
+          <li><strong>Sicherung der Geldwertstabilität</strong></li>
+        </ul>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Wichtig: kein eigenes System</div>
+        <p>Die angebotsorientierte Politik ist <strong>kein neues Wirtschaftssystem</strong>, sondern eine <strong>Akzentuierung innerhalb</strong> der Sozialen Marktwirtschaft. Das Gegenstück wäre die <em>nachfrageorientierte</em> Politik, die eher die Nachfrage ankurbelt (z. B. durch Konjunkturprogramme).</p>
+      </div>
+      <div class="lib-section">
+        <div class="lib-section-title">Der Hintergrund (kurz)</div>
+        <p>Dahinter steht der Gedanke, dass langfristig die <strong>Angebotsfaktoren</strong> über den Wohlstand entscheiden: Arbeit, Kapital, Humankapital (Bildung) und der technische Fortschritt.</p>
+      </div>`,
+    target:'Raum 06 · Das Dach' },
+];
+
+const LIB2ALT_CONTENT=`
+  <div class="lib-section">
+    <div class="lib-section-title">Das Fundament der Sozialen Marktwirtschaft</div>
+    <p>Marenia hat sich entschieden: weder zurück zur Kommandowirtschaft noch hinein in einen Markt ganz ohne Regeln. Doch eine Wirtschaftsordnung braucht ein theoretisches Fundament – und das liefert eine Denkrichtung der 1930er- und 1940er-Jahre: der <strong>Ordoliberalismus</strong> der <strong>Freiburger Schule</strong>.</p>
+  </div>
+  <div class="lib-section">
+    <div class="lib-section-title">Die Freiburger Schule (Walter Eucken)</div>
+    <p>Ihr wichtigster Kopf war der Ökonom <strong>Walter Eucken</strong>. Der Name kommt vom lateinischen <em>ordo</em> = „Ordnung". Das ist das Programm: Im Mittelpunkt steht nicht der einzelne Tausch, sondern die <strong>Ordnung</strong>, in der getauscht wird.</p>
+  </div>
+  <div class="lib-section">
+    <div class="lib-section-title">Die Diagnose: warum nicht einfach „freier Markt"?</div>
+    <p>Der klassische Liberalismus vertraute darauf, dass sich ein freier Markt von selbst einstellt, wenn der Staat sich heraushält (<em>Laissez-faire</em>). In Wirklichkeit entstanden daraus aber Kartelle und Monopole – Eucken nannte das die <strong>„Vermachtung"</strong> der Wirtschaft: Wenige Mächtige schalteten den Wettbewerb aus. Die Gegenrichtung, die Zentralverwaltungswirtschaft, lehnte Eucken ebenfalls ab, weil sie die Macht beim Staat ballt.</p>
+  </div>
+  <div class="lib-section">
+    <div class="lib-section-title">Die Kernidee: die Wettbewerbsordnung muss gestaltet werden</div>
+    <p>Ein funktionierender Wettbewerb entsteht <strong>nicht von selbst</strong>. Eine <strong>Wettbewerbsordnung</strong> muss bewusst geschaffen und geschützt werden – wie die Spielregeln eines Spiels, ohne die der Stärkste gewinnt statt des Besten.</p>
+  </div>
+  <div class="lib-section">
+    <div class="lib-section-title">Der Staat als Schiedsrichter</div>
+    <p>Daraus folgt ein <strong>starker, aber begrenzter Staat</strong>: stark gegen Machtballung (Kartelle, Monopole), aber zurückhaltend im laufenden Geschäft. Er setzt nur den <strong>Rahmen</strong> und greift nicht in einzelne Marktentscheidungen ein – wie ein <strong>Schiedsrichter</strong>, der die Regeln überwacht, aber nicht selbst mitspielt.</p>
+  </div>
+  <div class="lib-section">
+    <div class="lib-section-title">Ausblick</div>
+    <p>Auf diesem Fundament stehen die konkreten Prinzipien (Räume 3 und 4). Verbindet man es mit dem Gedanken des sozialen Ausgleichs, entsteht das Modell, das Marenia wählt: die <strong>Soziale Marktwirtschaft</strong>.</p>
+  </div>
+`;
+
+function renderLibrary(idx){
+  if(idx===1){ renderLibrary2Video(); return; }
+  state.screen='lib'+(idx+1); renderSeals();
+  window.scrollTo({top:0,behavior:'instant'});
+  const lib=LIBRARIES[idx];
+  root.innerHTML=`
+    ${libraryBanner()}
+    <div class="room-header">
+      <div class="room-number" style="color:var(--primary);">B${idx+1}</div>
+      <div class="room-meta"><div class="room-location">${lib.location}</div><div class="room-name">${lib.name}</div></div>
+    </div>
+    <p class="lede" style="margin-bottom:24px;">${lib.intro}</p>
+    ${lib.content}
+    ${libraryWarningBar()}
+    <div class="btn-row"><button class="btn btn-primary btn-arrow" onclick="goRoom(${idx+1})">Zum Rätsel: ${lib.target}</button></div>
+  `;
+}
+
+function renderLibrary2Video(){
+  state.screen='lib2'; renderSeals();
+  window.scrollTo({top:0,behavior:'instant'});
+  root.innerHTML=`
+    ${libraryBanner()}
+    <div class="room-header">
+      <div class="room-number" style="color:var(--primary);">B2</div>
+      <div class="room-meta"><div class="room-location">Marenia · Studierzimmer der Kommission</div><div class="room-name">Bibliothek des Fundaments</div></div>
+    </div>
+    <p class="lede" style="margin-bottom:22px;">Das Fundament: Woher stammt die Idee der Sozialen Marktwirtschaft? Sieh dir dazu den folgenden Erklärfilm an.</p>
+
+    <div class="video-wrap">
+      <iframe src="https://www.youtube-nocookie.com/embed/0caMSw71ENk?rel=0&controls=1" title="Erklärfilm: Ordoliberalismus und die Freiburger Schule" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div class="fallback-line">
+      <span>Video lädt nicht oder zeigt einen Fehler?</span>
+      <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=0caMSw71ENk" target="_blank" rel="noopener noreferrer">Direkt auf YouTube öffnen ↗</a>
+      <button class="btn btn-ghost" onclick="renderLibrary2Alt()">Stattdessen Textfassung lesen</button>
+    </div>
+
+    ${libraryWarningBar()}
+    <div class="btn-row"><button class="btn btn-primary btn-arrow" onclick="goRoom(2)">Zum Rätsel: Raum 02 · Das Fundament</button></div>
+  `;
+}
+window.renderLibrary2Alt=()=>{
+  state.screen='lib2alt'; renderSeals();
+  window.scrollTo({top:0,behavior:'instant'});
+  root.innerHTML=`
+    ${libraryBanner()}
+    <div class="room-header">
+      <div class="room-number" style="color:var(--primary);">B2</div>
+      <div class="room-meta"><div class="room-location">Marenia · Studierzimmer der Kommission</div><div class="room-name">Bibliothek des Fundaments — Textfassung</div></div>
+    </div>
+    <div class="card" style="background:var(--accent-soft); border-color:rgba(169,119,42,0.3);">
+      <p style="margin:0; font-size:14px;">Dies ist die <strong>Textfassung</strong> des Erklärfilms – inhaltlich deckungsgleich. Von hier aus geht es ganz normal weiter zum Rätsel.</p>
+    </div>
+    <p class="lede" style="margin-bottom:22px;">Das Fundament: Woher stammt die Idee der Sozialen Marktwirtschaft?</p>
+    ${LIB2ALT_CONTENT}
+    ${libraryWarningBar()}
+    <div class="btn-row">
+      <button class="btn btn-primary btn-arrow" onclick="goRoom(2)">Zum Rätsel: Raum 02 · Das Fundament</button>
+      <button class="btn btn-ghost" onclick="renderLibrary2Video()">Zurück zum Video</button>
+    </div>
+  `;
+};
+
+function libraryBanner(){
+  return `
+    <div class="library-banner">
+      <svg viewBox="0 0 24 24" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <div>Dies ist ein <strong>Bibliotheksraum</strong>. Hier findest du das Wissen für das folgende Rätsel.
+        <span class="warn">⚠ Sobald du den Rätselraum betrittst, kommst du nicht mehr hierher zurück. Mach dir Notizen!</span>
+      </div>
+    </div>`;
+}
+function libraryWarningBar(){
+  return `
+    <div class="lib-warning-bar">
+      <svg viewBox="0 0 24 24" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>Hast du dir alles notiert? <strong>Ab dem Rätselraum gibt es keinen Weg zurück.</strong></div>
+    </div>`;
+}
+window.goLibrary=(n)=>{ renderLibrary(n-1); };
+
+/* ============================================================
+   ROOM DATA
+   ============================================================ */
+const ROOMS=[
+  { id:1, location:'Marenia · Grundsatzabteilung', name:'Die Grundentscheidung',
+    briefing:'Bevor irgendetwas gebaut wird, muss die Kommission festlegen, welche Ordnung Marenia überhaupt anstrebt.',
+    task:'Beantworte beide Fragen. Wähle jeweils die <strong>eine</strong> richtige Aussage.' },
+  { id:2, location:'Marenia · Grundsatzabteilung', name:'Das Fundament',
+    briefing:'Das theoretische Fundament steht: der Ordoliberalismus. Trage die Schlüsselbegriffe an die richtigen Stellen ein.',
+    task:'Vervollständige den Lückentext. Wähle für jede Lücke den passenden Begriff aus.' },
+  { id:3, location:'Marenia · Kommissionssaal', name:'Die tragenden Säulen I',
+    briefing:'Die konstituierenden Prinzipien werden eingezogen – die Säulen, ohne die nichts trägt.',
+    task:'Ordne jedem konstituierenden Prinzip das passende Beispiel zu.' },
+  { id:4, location:'Marenia · Kommissionssaal', name:'Die tragenden Säulen II',
+    briefing:'Jetzt die Korrektureingriffe: Welche Prinzipien sind regulierend?',
+    task:'Wähle <strong>alle</strong> Prinzipien aus, die <strong>regulierend</strong> sind (Korrektureingriffe des Staates).' },
+  { id:5, location:'Marenia · Kommissionssaal', name:'Die Steuerung',
+    briefing:'Die Kommission muss jede Maßnahme richtig einordnen: Regel (Ordnung) oder Eingriff (Prozess)?',
+    task:'Ordne jede Maßnahme der <strong>Ordnungspolitik</strong> oder der <strong>Prozesspolitik</strong> zu.' },
+  { id:6, location:'Marenia · Ministerium für Wiederaufbau', name:'Das Dach',
+    briefing:'Das Dach wird gedeckt – und der Schlussstein gesetzt, der das ganze Haus zusammenhält.',
+    task:'Wähle die angebotsorientierten Maßnahmen aus und setze danach den Schlussstein ein.' },
+];
+
+/* ---------- Room 1: Single-Choice ---------- */
+const PUZZLE_R1=[
+  { q:'Welche Aussage trifft den Kern der Sozialen Marktwirtschaft?',
+    options:[
+      {t:'Der Staat plant Produktion, Preise und Verteilung zentral.', correct:false},
+      {t:'Der Markt regelt alles; der Staat greift grundsätzlich nicht ein.', correct:false},
+      {t:'Wirtschaftliche Freiheit auf dem Markt wird mit sozialem Ausgleich verbunden; der Staat setzt den Rahmen.', correct:true},
+      {t:'Wirtschaftliche Freiheit ist nur in der Planwirtschaft möglich.', correct:false},
+    ]},
+  { q:'Welche Aussage über die Entstehung ist richtig?',
+    options:[
+      {t:'Alfred Müller-Armack prägte den Begriff, Ludwig Erhard setzte das Modell politisch durch.', correct:true},
+      {t:'Karl Marx entwarf die Soziale Marktwirtschaft.', correct:false},
+      {t:'Die Soziale Marktwirtschaft wurde aufgezwungen und von niemandem vertreten.', correct:false},
+      {t:'Walter Eucken prägte den Begriff und war der erste Wirtschaftsminister.', correct:false},
+    ]},
+];
+let r1Choice=[null,null];
+let r1Submitted=false;
+function renderRoom1(){
+  state.screen='room1'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r1Choice=[null,null]; r1Submitted=false;
+  const room=ROOMS[0];
+  const blocks=PUZZLE_R1.map((qq,qi)=>`
+    <div class="mc-question" id="mcq-${qi}">
+      <div class="mc-q-text">${qi+1}. ${qq.q}</div>
+      ${qq.options.map((o,oi)=>`<button class="mc-option" id="mc-${qi}-${oi}" onclick="pickR1(${qi},${oi})"><span class="dot"></span><span>${o.t}</span></button>`).join('')}
+    </div>`).join('');
+  root.innerHTML=`${roomHeader(room)}${blocks}${roomFooter('Eines der beiden Extreme plant alles zentral, das andere überlässt alles dem Markt. Die Soziale Marktwirtschaft liegt bewusst dazwischen.','checkR1()')}`;
+}
+window.pickR1=(qi,oi)=>{
+  if(r1Submitted) return;
+  r1Choice[qi]=oi;
+  PUZZLE_R1[qi].options.forEach((o,k)=>{ document.getElementById(`mc-${qi}-${k}`).classList.toggle('selected',k===oi); });
+};
+window.checkR1=()=>{
+  if(r1Choice.includes(null)){ showStatus('warning','Noch unvollständig','Bitte beantworte beide Fragen.'); return; }
+  const errors=[]; let allCorrect=true;
+  PUZZLE_R1.forEach((qq,qi)=>{
+    const chosen=r1Choice[qi]; const correctIdx=qq.options.findIndex(o=>o.correct);
+    const okay=qq.options[chosen].correct;
+    const el=document.getElementById(`mc-${qi}-${chosen}`);
+    el.classList.remove('selected'); el.classList.add(okay?'correct':'incorrect');
+    if(!okay){
+      allCorrect=false;
+      document.getElementById(`mc-${qi}-${correctIdx}`).classList.add('correct');
+      errors.push({kind:'mc_falsch', item:(qi+1)+'. '+qq.q, wrongAnswer:qq.options[chosen].t, correctAnswer:qq.options[correctIdx].t});
+    }
+  });
+  recordAttempt(0,{errors});
+  if(allCorrect){ r1Submitted=true; showStatus('success','Richtig','Die Grundentscheidung steht. Marenia wählt den dritten Weg.'); setTimeout(()=>triggerReveal(0),800); }
+  else{ showStatus('warning','Noch nicht ganz','Schau dir die grün markierte richtige Antwort an und korrigiere deine Wahl.'); setTimeout(()=>{ PUZZLE_R1.forEach((qq,qi)=>qq.options.forEach((o,k)=>{ const e=document.getElementById(`mc-${qi}-${k}`); e.classList.remove('correct','incorrect'); if(r1Choice[qi]===k) e.classList.add('selected'); })); },4000); }
+};
+
+/* ---------- Room 2: Lückentext (Dropdowns) ---------- */
+const R2_BANK=['Ordoliberalismus','Freiburger Schule','Vermachtung','Wettbewerbsordnung','Rahmen','Schiedsrichter','Planwirtschaft','Laissez-faire'];
+const R2_BLANKS=[
+  {id:0,correct:'Ordoliberalismus'},
+  {id:1,correct:'Freiburger Schule'},
+  {id:2,correct:'Vermachtung'},
+  {id:3,correct:'Wettbewerbsordnung'},
+  {id:4,correct:'Rahmen'},
+  {id:5,correct:'Schiedsrichter'},
+];
+let r2Submitted=false;
+function r2Select(i, bank){
+  return `<select class="cloze-select match-select" id="r2-${i}"><option value="">— wählen —</option>${bank.map(w=>`<option value="${w}">${w}</option>`).join('')}</select>`;
+}
+function renderRoom2(){
+  state.screen='room2'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r2Submitted=false;
+  const room=ROOMS[1];
+  const bank=shuffle(R2_BANK);
+  const cloze=`
+    <div class="card"><p class="cloze">
+      Die theoretische Grundlage der Sozialen Marktwirtschaft ist der ${r2Select(0,bank)}, der von der ${r2Select(1,bank)} um Walter Eucken entwickelt wurde.
+      Eucken kritisierte, dass ein Markt ganz ohne Regeln zur ${r2Select(2,bank)} führt – also zu Kartellen und Monopolen, die den Wettbewerb zerstören.
+      Deshalb muss der Staat eine ${r2Select(3,bank)} bewusst schaffen und schützen. Er setzt dabei nur den ${r2Select(4,bank)} und greift nicht in einzelne Marktentscheidungen ein – wie ein ${r2Select(5,bank)}, der die Regeln überwacht, aber nicht selbst mitspielt.
+    </p></div>`;
+  root.innerHTML=`${roomHeader(room)}${cloze}${roomFooter('Achte auf die Schlüsselbegriffe aus dem Film: Wer entwickelte die Theorie? Wozu führt ein Markt ohne Regeln? Welche Ordnung schafft der Staat? Womit lässt sich seine Rolle vergleichen?','checkR2()')}`;
+}
+window.checkR2=()=>{
+  let allCorrect=true; const errors=[];
+  R2_BLANKS.forEach(b=>{
+    const sel=document.getElementById('r2-'+b.id); const val=sel.value;
+    sel.classList.remove('ok','bad');
+    if(val===b.correct){ sel.classList.add('ok'); }
+    else{ sel.classList.add('bad'); allCorrect=false; errors.push({kind:'luecke_falsch', item:'Lücke '+(b.id+1), wrongAnswer:val||'(leer)', correctAnswer:b.correct}); }
+  });
+  recordAttempt(1,{errors});
+  if(allCorrect){ r2Submitted=true; showStatus('success','Richtig','Das Fundament ist gelegt. Der Ordoliberalismus trägt das Haus.'); setTimeout(()=>triggerReveal(1),800); }
+  else{ showStatus('warning','Noch nicht ganz','Die rot markierten Lücken stimmen noch nicht. Korrigiere sie und prüfe erneut.'); }
+};
+
+/* ---------- Room 3: Zuordnung (Dropdowns) ---------- */
+const R3_PRINCIPLES=[
+  {key:'eigentum', label:'Privateigentum', correct:'b'},
+  {key:'vertrag', label:'Vertragsfreiheit', correct:'d'},
+  {key:'offen', label:'Offene Märkte', correct:'a'},
+  {key:'haftung', label:'Haftung', correct:'e'},
+  {key:'geld', label:'Geldwertstabilität', correct:'c'},
+];
+const R3_EXAMPLES={
+  a:'Ein neues Unternehmen darf jederzeit in den Markt eintreten; es gibt keine künstlichen Zutrittssperren.',
+  b:'Eine Bäckerin besitzt ihren Laden selbst und entscheidet allein über ihn.',
+  c:'Die Währung behält ihren Wert, damit Preise verlässliche Signale geben.',
+  d:'Käufer und Verkäufer handeln frei aus, zu welchem Preis sie einen Vertrag schließen.',
+  e:'Wer die Gewinne einstreicht, muss auch für Verluste und Schäden geradestehen.',
+};
+let r3Submitted=false;
+function renderRoom3(){
+  state.screen='room3'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r3Submitted=false;
+  const room=ROOMS[2];
+  const keys=Object.keys(R3_EXAMPLES);
+  const rows=R3_PRINCIPLES.map((p,i)=>`
+    <div class="match-row">
+      <div class="match-left">${i+1}. ${p.label}</div>
+      <select class="match-select" id="r3-${p.key}">
+        <option value="">— Beispiel wählen —</option>
+        ${keys.map(k=>`<option value="${k}">${R3_EXAMPLES[k]}</option>`).join('')}
+      </select>
+    </div>`).join('');
+  root.innerHTML=`${roomHeader(room)}<div class="card">${rows}</div>${roomFooter('Frage dich bei jedem Beispiel, welches einzelne Prinzip es am genauesten beschreibt – z. B. „selbst besitzen" = Privateigentum, „frei aushandeln" = Vertragsfreiheit.','checkR3()')}`;
+}
+window.checkR3=()=>{
+  let allCorrect=true; const errors=[];
+  R3_PRINCIPLES.forEach(p=>{
+    const sel=document.getElementById('r3-'+p.key); const val=sel.value;
+    sel.classList.remove('ok','bad');
+    if(val===p.correct){ sel.classList.add('ok'); }
+    else{ sel.classList.add('bad'); allCorrect=false;
+      errors.push({kind:'zuordnung_falsch', item:p.label, wrongAnswer:val?R3_EXAMPLES[val]:'(leer)', correctAnswer:R3_EXAMPLES[p.correct]}); }
+  });
+  recordAttempt(2,{errors});
+  if(allCorrect){ r3Submitted=true; showStatus('success','Richtig','Die ersten Säulen stehen. Der Markt hat sein Gerüst.'); setTimeout(()=>triggerReveal(2),800); }
+  else{ showStatus('warning','Noch nicht ganz','Die rot markierten Zuordnungen stimmen noch nicht. Korrigiere sie und prüfe erneut.'); }
+};
+
+/* ---------- Room 4: Multi-Select ---------- */
+const PUZZLE_R4=[
+  {id:'m1', text:'Monopolaufsicht', correct:true, expl:'Regulierend: Der Staat verhindert, dass Konzerne den Wettbewerb ausschalten.'},
+  {id:'m2', text:'Einkommensumverteilung (z. B. progressive Steuern)', correct:true, expl:'Regulierend: mildert große Einkommensunterschiede ab.'},
+  {id:'m3', text:'Korrektur externer Effekte (z. B. Umweltabgaben)', correct:true, expl:'Regulierend: Verursacher zahlen für Schäden.'},
+  {id:'m4', text:'Soziale Sicherung (Sozialversicherungen)', correct:true, expl:'Regulierend (didaktisch gebündelt): das eigentlich „Soziale" der Ordnung.'},
+  {id:'m5', text:'Privateigentum', correct:false, expl:'Konstituierend (Dauerregel, damit der Markt überhaupt funktioniert), nicht regulierend.'},
+  {id:'m6', text:'Vertragsfreiheit', correct:false, expl:'Konstituierend (Dauerregel, damit der Markt überhaupt funktioniert), nicht regulierend.'},
+  {id:'m7', text:'Geldwertstabilität', correct:false, expl:'Konstituierend (Dauerregel, damit der Markt überhaupt funktioniert), nicht regulierend.'},
+  {id:'m8', text:'Offene Märkte', correct:false, expl:'Konstituierend (Dauerregel: jede:r darf neu in den Markt eintreten), nicht regulierend.'},
+  {id:'m9', text:'Haftung', correct:false, expl:'Konstituierend (wer Gewinne hat, trägt auch Verluste), nicht regulierend.'},
+  {id:'m10', text:'Ein funktionsfähiges Preissystem', correct:false, expl:'Konstituierend: das übergeordnete Ziel aller Dauerregeln (freie, unverzerrte Preise) – kein korrigierender Eingriff.'},
+];
+function shuffle(arr){
+  const a=arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+let r4Selected=new Set(); let r4Submitted=false; let r4Order=[];
+function renderRoom4(){
+  state.screen='room4'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r4Selected=new Set(); r4Submitted=false;
+  r4Order=shuffle(PUZZLE_R4);
+  const room=ROOMS[3];
+  const cards=r4Order.map(m=>`<button class="multi-card" id="r4-${m.id}" onclick="toggleR4('${m.id}')"><span class="box"></span><span>${m.text}</span></button>`).join('');
+  root.innerHTML=`${roomHeader(room)}<div class="multi-grid">${cards}</div>${roomFooter('Regulierend = der Staat <em>korrigiert</em> unerwünschte Ergebnisse. Konstituierend = Dauerregeln, damit der Markt überhaupt läuft (die gehören NICHT angekreuzt).','checkR4()')}`;
+}
+window.toggleR4=(id)=>{
+  if(r4Submitted) return;
+  const c=document.getElementById('r4-'+id);
+  if(r4Selected.has(id)){ r4Selected.delete(id); c.classList.remove('selected'); }
+  else{ r4Selected.add(id); c.classList.add('selected'); }
+};
+window.checkR4=()=>{
+  let perfect=true; const errors=[];
+  PUZZLE_R4.forEach(m=>{
+    const c=document.getElementById('r4-'+m.id); c.classList.remove('selected','correct','incorrect','missed');
+    const sel=r4Selected.has(m.id);
+    if(sel&&m.correct) c.classList.add('correct');
+    else if(sel&&!m.correct){ c.classList.add('incorrect'); perfect=false; errors.push({kind:'falsch_gewaehlt', item:m.text, explanation:m.expl}); }
+    else if(!sel&&m.correct){ c.classList.add('missed'); perfect=false; errors.push({kind:'uebersehen', item:m.text, explanation:m.expl}); }
+  });
+  recordAttempt(3,{errors});
+  if(perfect){ r4Submitted=true; showStatus('success','Richtig','Die regulierenden Prinzipien sitzen. Jetzt ist die Ordnung wirklich „sozial".'); setTimeout(()=>triggerReveal(3),800); }
+  else{ showStatus('warning','Noch nicht ganz','Rot = fälschlich gewählt, gold = übersehen. Lies die Markierungen und korrigiere deine Auswahl.'); setTimeout(()=>{ PUZZLE_R4.forEach(m=>{ const c=document.getElementById('r4-'+m.id); c.classList.remove('correct','incorrect','missed'); if(r4Selected.has(m.id)) c.classList.add('selected'); }); },4500); }
+};
+
+/* ---------- Room 5: Klassifikation (zwei Optionen pro Zeile) ---------- */
+const PUZZLE_R5=[
+  {id:'o1', text:'Ein Kartellrecht verbietet Preisabsprachen zwischen Unternehmen.', correct:'ordnung'},
+  {id:'o2', text:'Das Privateigentum wird in der Verfassung garantiert.', correct:'ordnung'},
+  {id:'o3', text:'Eine unabhängige Zentralbank sichert dauerhaft die Währung.', correct:'ordnung'},
+  {id:'p1', text:'Der Staat legt ein milliardenschweres Konjunkturprogramm auf, um die Nachfrage anzukurbeln.', correct:'prozess'},
+  {id:'p2', text:'Eine einzelne Branche erhält gezielte Subventionen.', correct:'prozess'},
+  {id:'p3', text:'Der Staat senkt kurzfristig Steuern, um die Konjunktur zu beleben.', correct:'prozess'},
+];
+let r5Choice={}; let r5Submitted=false; let r5Order=[];
+function renderRoom5(){
+  state.screen='room5'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r5Choice={}; r5Submitted=false;
+  r5Order=shuffle(PUZZLE_R5);
+  const room=ROOMS[4];
+  const rows=r5Order.map(it=>`
+    <div class="classify-row" id="r5row-${it.id}">
+      <div class="classify-text">${it.text}</div>
+      <div class="classify-btns">
+        <button class="classify-btn" id="r5-${it.id}-ordnung" onclick="pickR5('${it.id}','ordnung')">Ordnungspolitik</button>
+        <button class="classify-btn" id="r5-${it.id}-prozess" onclick="pickR5('${it.id}','prozess')">Prozesspolitik</button>
+      </div>
+    </div>`).join('');
+  root.innerHTML=`${roomHeader(room)}<div class="card">${rows}</div>${roomFooter('Faustregel: Wird eine <em>dauerhafte Regel</em> gesetzt (Ordnung) oder in den <em>laufenden Ablauf</em> eingegriffen (Prozess)?','checkR5()')}`;
+}
+window.pickR5=(id,val)=>{
+  if(r5Submitted) return;
+  r5Choice[id]=val;
+  document.getElementById(`r5-${id}-ordnung`).classList.toggle('active',val==='ordnung');
+  document.getElementById(`r5-${id}-prozess`).classList.toggle('active',val==='prozess');
+};
+window.checkR5=()=>{
+  if(Object.keys(r5Choice).length<PUZZLE_R5.length){ showStatus('warning','Noch unvollständig','Bitte ordne jede Maßnahme zu.'); return; }
+  let allCorrect=true; const errors=[];
+  const label={ordnung:'Ordnungspolitik',prozess:'Prozesspolitik'};
+  PUZZLE_R5.forEach(it=>{
+    const row=document.getElementById('r5row-'+it.id); row.classList.remove('correct','incorrect');
+    if(r5Choice[it.id]===it.correct) row.classList.add('correct');
+    else{ row.classList.add('incorrect'); allCorrect=false; errors.push({kind:'falsch_einsortiert', item:it.text, wrongAnswer:label[r5Choice[it.id]], correctAnswer:label[it.correct]}); }
+  });
+  recordAttempt(4,{errors});
+  if(allCorrect){ r5Submitted=true; showStatus('success','Richtig','Die Steuerung ist verstanden: erst die Ordnung, dann der Prozess.'); setTimeout(()=>triggerReveal(4),800); }
+  else{ showStatus('warning','Noch nicht ganz','Die rot hinterlegten Zeilen stimmen noch nicht. Korrigiere sie und prüfe erneut.'); setTimeout(()=>{ PUZZLE_R5.forEach(it=>document.getElementById('r5row-'+it.id).classList.remove('correct','incorrect')); },4500); }
+};
+
+/* ---------- Room 6: Multi-Select + Schlussstein-Eingabe ---------- */
+const PUZZLE_R6=[
+  {id:'a1', text:'Senkung der Unternehmenssteuern', correct:true, expl:'Angebotsorientiert: verbessert die Produktionsbedingungen.'},
+  {id:'a2', text:'Bürokratieabbau / Deregulierung', correct:true, expl:'Angebotsorientiert: erleichtert das Wirtschaften.'},
+  {id:'a3', text:'Flexibilisierung des Arbeitsmarktes', correct:true, expl:'Angebotsorientiert: setzt an der Angebotsseite an.'},
+  {id:'a4', text:'Sicherung der Geldwertstabilität', correct:true, expl:'Angebotsorientiert: stabile Rahmenbedingungen.'},
+  {id:'n1', text:'Höhere Sozialleistungen, um die Nachfrage zu beleben', correct:false, expl:'Nachfrageorientiert, nicht angebotsorientiert.'},
+  {id:'n2', text:'Kurzfristiges Konjunkturprogramm zur Stützung der Nachfrage', correct:false, expl:'Nachfrageorientiert, nicht angebotsorientiert.'},
+];
+let r6Selected=new Set(); let r6Submitted=false; let r6Order=[];
+function normalizeAnswer(s){ return (s||'').toLowerCase().replace(/[^a-zäöüß ]/g,'').replace(/\s+/g,' ').trim(); }
+const R6_KEYSTONE_ACCEPT=['soziale marktwirtschaft','sozialen marktwirtschaft','die soziale marktwirtschaft'];
+function renderRoom6(){
+  state.screen='room6'; renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  r6Selected=new Set(); r6Submitted=false;
+  r6Order=shuffle(PUZZLE_R6);
+  const room=ROOMS[5];
+  const cards=r6Order.map(m=>`<button class="multi-card" id="r6-${m.id}" onclick="toggleR6('${m.id}')"><span class="box"></span><span>${m.text}</span></button>`).join('');
+  root.innerHTML=`
+    ${roomHeader(room)}
+    <p class="body-lg" style="margin-bottom:4px;"><strong>Teil 1:</strong> Welche Maßnahmen gehören zur <strong>angebotsorientierten</strong> Politik?</p>
+    <div class="multi-grid">${cards}</div>
+    <div class="card" style="margin-top:6px;">
+      <p class="body-lg" style="margin-bottom:10px;"><strong>Teil 2 · Der Schlussstein.</strong> Wie heißt die übergreifende Wirtschaftsordnung, die du in diesem Escape-Room Stück für Stück aufgebaut hast? (zwei Wörter)</p>
+      <input id="r6input" class="text-input" type="text" maxlength="40" placeholder="Antwort eingeben …" style="max-width:360px;" onkeydown="if(event.key==='Enter') checkR6()">
+    </div>
+    ${roomFooter('Teil 1: Angebotsseite = bessere Produktionsbedingungen (Steuern, Bürokratie, Arbeitsmarkt, stabiles Geld). Teil 2: Es ist der Name der ganzen Ordnung – das Ziel, das Marenia von Anfang an ausgerufen hat.','checkR6()')}`;
+}
+window.toggleR6=(id)=>{
+  if(r6Submitted) return;
+  const c=document.getElementById('r6-'+id);
+  if(r6Selected.has(id)){ r6Selected.delete(id); c.classList.remove('selected'); }
+  else{ r6Selected.add(id); c.classList.add('selected'); }
+};
+window.checkR6=()=>{
+  let perfect=true; const errors=[];
+  PUZZLE_R6.forEach(m=>{
+    const c=document.getElementById('r6-'+m.id); c.classList.remove('selected','correct','incorrect','missed');
+    const sel=r6Selected.has(m.id);
+    if(sel&&m.correct) c.classList.add('correct');
+    else if(sel&&!m.correct){ c.classList.add('incorrect'); perfect=false; errors.push({kind:'falsch_gewaehlt', item:m.text, explanation:m.expl}); }
+    else if(!sel&&m.correct){ c.classList.add('missed'); perfect=false; errors.push({kind:'uebersehen', item:m.text, explanation:m.expl}); }
+  });
+  const inputEl=document.getElementById('r6input');
+  const val=inputEl.value;
+  const inputOk=R6_KEYSTONE_ACCEPT.includes(normalizeAnswer(val));
+  if(!inputOk){ perfect=false; inputEl.style.borderColor='var(--error)'; errors.push({kind:'falsche_eingabe', item:'Schlussstein: Name der Wirtschaftsordnung', wrongAnswer:val||'(leer)', correctAnswer:'Soziale Marktwirtschaft'}); }
+  else inputEl.style.borderColor='var(--success)';
+  recordAttempt(5,{errors});
+  if(perfect){ r6Submitted=true; showStatus('success','Richtig','Das Dach ist gedeckt, der Schlussstein sitzt. Das Haus der Sozialen Marktwirtschaft steht.'); setTimeout(()=>triggerReveal(5),800); }
+  else{ showStatus('warning','Noch nicht ganz','Prüfe Teil 1 (rot = falsch, gold = übersehen) und Teil 2 (der Schlussstein-Begriff).'); setTimeout(()=>{ PUZZLE_R6.forEach(m=>{ const c=document.getElementById('r6-'+m.id); c.classList.remove('correct','incorrect','missed'); if(r6Selected.has(m.id)) c.classList.add('selected'); }); },4500); }
+};
+
+/* ============================================================
+   REVEAL & ROUTER
+   ============================================================ */
+function triggerReveal(roomIdx){
+  state.solved[roomIdx]=true; state.letters[roomIdx]=CODE_WORD[roomIdx];
+  const overlay=document.getElementById('revealOverlay');
+  document.getElementById('revealLetter').textContent=CODE_WORD[roomIdx];
+  document.getElementById('revealCaption').textContent=`Buchstabe ${roomIdx+1} von 6 freigeschaltet`;
+  const progBox=document.getElementById('revealProgress'); progBox.innerHTML='';
+  for(let i=0;i<6;i++){ const span=document.createElement('span'); span.className='reveal-progress-letter'+(state.solved[i]?' lit':''); span.textContent=state.solved[i]?CODE_WORD[i]:'·'; progBox.appendChild(span); }
+  const btn=document.getElementById('revealContinue'); const isLast=roomIdx===5;
+  btn.textContent=isLast?'Gründungsplan ratifizieren':'Nächste Bibliothek betreten';
+  btn.onclick=()=>{ overlay.classList.remove('show'); setTimeout(()=>{ if(isLast) renderFinal(); else goLibrary(roomIdx+2); },250); };
+  overlay.classList.add('show');
+}
+window.goRoom=(n)=>{
+  window.scrollTo({top:0,behavior:'instant'});
+  switch(n){ case 1:renderRoom1();break; case 2:renderRoom2();break; case 3:renderRoom3();break; case 4:renderRoom4();break; case 5:renderRoom5();break; case 6:renderRoom6();break; }
+};
+
+/* ============================================================
+   FINAL
+   ============================================================ */
+function renderFinal(){
+  state.screen='final';
+  if(!state.completedAt) state.completedAt=new Date();
+  renderSeals(); window.scrollTo({top:0,behavior:'instant'});
+  const totalErrors=state.mistakes.reduce((a,m)=>a+(m&&m.errors?m.errors.length:0),0);
+  const perfectRooms=state.attempts.filter((a,i)=>a>=1 && (!state.mistakes[i]||!state.mistakes[i].errors||state.mistakes[i].errors.length===0)).length;
+  const summary = totalErrors===0
+    ? `Alle sechs Räume im ersten Versuch fehlerfrei – stark, ${escapeHtml(state.firstName)}.`
+    : `Du hast ${perfectRooms} von 6 Räumen im ersten Versuch fehlerfrei gelöst (${totalErrors} Erstversuchs-Fehler). Im Überblick findest du alle mit Erklärung.`;
+
+  root.innerHTML=`
+    <div class="final-hero">
+      <div class="kicker" style="justify-content:center;">Gründungsplan ratifiziert · Lösungswort</div>
+      <div class="final-code">${CODE_WORD}</div>
+      <p class="lede" style="margin:20px auto 0; max-width:58ch;">
+        Geschafft, ${escapeHtml(state.firstName)}. Das „Haus der Sozialen Marktwirtschaft" steht – vom Fundament über die Säulen bis zum Dach. Marenia hat seine neue Ordnung.
+      </p>
+      <p class="text-mute" style="margin-top:12px; max-width:58ch; margin-left:auto; margin-right:auto; font-size:13.5px;">${summary}</p>
+    </div>
+
+    <div class="house-wrap">
+      <svg viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="220,16 60,86 380,86" fill="#1f4e5f"/>
+        <text x="220" y="70" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="13" font-weight="600">Dach · Ziele &amp; Steuerung</text>
+        <rect x="74" y="90" width="292" height="58" fill="#a9772a"/>
+        <text x="220" y="124" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="12.5" font-weight="600">Säulen · konstituierende &amp; regulierende Prinzipien</text>
+        <rect x="74" y="152" width="292" height="52" fill="#163a47"/>
+        <text x="220" y="183" text-anchor="middle" fill="#ffffff" font-family="Inter,sans-serif" font-size="12.5" font-weight="600">Fundament · Ordoliberalismus</text>
+        <rect x="60" y="208" width="320" height="14" fill="#6c7888"/>
+        <text x="220" y="218" text-anchor="middle" fill="#ffffff" font-family="IBM Plex Mono,monospace" font-size="9" letter-spacing="2">HAUS DER SOZIALEN MARKTWIRTSCHAFT</text>
+      </svg>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size:22px; margin-bottom:6px;">Drei Schritte zum Abschluss</h2>
+      <p class="text-mute" style="font-size:13.5px; margin-bottom:20px;">Alle drei sind nötig, damit deine Lehrkraft den Abschluss verbuchen kann.</p>
+      <div class="final-actions">
+        <button class="final-action" onclick="downloadOverviewPDF()">
+          <div class="label">Schritt 1 · Pflicht</div>
+          <div class="title">„Überblick deiner Antworten &amp; Erläuterungen" herunterladen</div>
+          <div class="desc">Persönliche PDF mit deinem Namen, Geburtsdatum, Code und Abschlusszeit – plus einer Seite mit Lösungserläuterungen. <strong style="color:var(--primary)">Lade sie in Moodle hoch.</strong></div>
+        </button>
+        <button class="final-action" onclick="openFeiditor()">
+          <div class="label">Schritt 2 · Digitales Arbeitsblatt</div>
+          <div class="title">Digitales Arbeitsblatt im Feiditor öffnen</div>
+          <div class="desc">Öffnet sich in einem neuen Tab. Dort sind die Aufgaben schon eingetragen – bearbeite sie direkt im Schreibbereich, wandle deinen Text am Ende in eine PDF-Datei um und lade die erzeugte PDF bei Moodle hoch.</div>
+        </button>
+        <button class="final-action" onclick="copyCode()">
+          <div class="label">Schritt 3 · Bestätigung</div>
+          <div class="title">Bestätigungscode: <span class="font-mono" style="color:var(--accent); padding-left:6px;">${state.code}</span></div>
+          <div class="desc" id="copyDesc">Trage diesen Code in die entsprechende Moodle-Aufgabe ein. Klicke hier, um ihn zu kopieren.</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="erhard-card">
+        <div class="erhard-frame">
+          <svg viewBox="0 0 128 160" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="124" height="156" rx="4" fill="#faf8f3" stroke="#a9772a" stroke-width="2"/>
+            <rect x="9" y="9" width="110" height="142" rx="2" fill="none" stroke="#a9772a" stroke-width="0.8"/>
+            <circle cx="64" cy="62" r="26" fill="#e6eef0"/>
+            <path d="M30 132 C30 100 98 100 98 132 Z" fill="#e6eef0"/>
+            <circle cx="64" cy="62" r="26" fill="none" stroke="#1f4e5f" stroke-width="1.5"/>
+            <path d="M30 132 C30 100 98 100 98 132" fill="none" stroke="#1f4e5f" stroke-width="1.5"/>
+            <text x="64" y="150" text-anchor="middle" fill="#a9772a" font-family="IBM Plex Mono,monospace" font-size="7" letter-spacing="1">L. E.</text>
+          </svg>
+          <div class="erhard-cap">Stilisierte Darstellung —<br>kein Porträtfoto</div>
+        </div>
+        <div class="erhard-body">
+          <h3>Ludwig Erhard</h3>
+          <div class="erhard-dates">1897 – 1977</div>
+          <p style="font-size:14.5px; margin-bottom:0;">
+            Erhard war Ökonom und Politiker und gilt als das <strong>politische Gesicht der Sozialen Marktwirtschaft</strong>. Mit der Währungsreform von 1948 gab er die Preise frei und beendete die staatliche Bewirtschaftung. Als erster Bundeswirtschaftsminister der Bundesrepublik (1949–1963) wurde er zum „Vater des Wirtschaftswunders"; sein Leitbild <strong>„Wohlstand für alle"</strong> prägte das Modell. Später war er Bundeskanzler (1963–1966). Deshalb lautet das Lösungswort dieses Escape-Rooms <strong>ERHARD</strong>.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-size:17px; margin-bottom:10px;">Das Haus, das du gebaut hast</h3>
+      <ul class="muted-list">
+        <li><strong>Grundentscheidung</strong> – die SM als dritter Weg zwischen Plan- und schrankenlosem Markt</li>
+        <li><strong>Fundament</strong> – Ordoliberalismus, Freiburger Schule, Wettbewerbsordnung</li>
+        <li><strong>Säulen I</strong> – konstituierende Prinzipien (Eigentum, Vertrag, offene Märkte, Haftung, stabiles Geld)</li>
+        <li><strong>Säulen II</strong> – regulierende Prinzipien (Monopolaufsicht, Umverteilung, externe Effekte, soziale Sicherung)</li>
+        <li><strong>Steuerung</strong> – Ordnungspolitik (Rahmen) vs. Prozesspolitik (Eingriff)</li>
+        <li><strong>Dach</strong> – angebotsorientierte Politik als Akzentuierung <em>innerhalb</em> der SM</li>
+      </ul>
+    </div>
+  `;
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderStart();
+</script>
+</body>
+</html>

@@ -2241,6 +2241,14 @@ window.submitStart=()=>{
 function renderIntro(){
   state.screen='intro'; renderSeals();
   root.innerHTML=`
+    <div class="video-wrap">
+      <iframe src="https://www.youtube-nocookie.com/embed/ShLxo4Mrb0I?rel=0&controls=1" title="Einführungsvideo zum Escape-Room" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div class="fallback-line" style="margin-bottom:22px;">
+      <span>Video lädt nicht oder zeigt einen Fehler?</span>
+      <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=ShLxo4Mrb0I" target="_blank" rel="noopener noreferrer">Direkt auf YouTube öffnen ↗</a>
+    </div>
+
     <div class="kicker">Der Auftrag</div>
     <h1 class="title-mega">Willkommen,<br><em>${escapeHtml(state.firstName)}</em></h1>
     <p class="lede">Sechs Bibliotheksräume. Sechs Rätsel. Ein Gründungsplan.<br>Bau Stockwerk für Stockwerk das „Haus der Sozialen Marktwirtschaft".</p>
@@ -2936,6 +2944,16 @@ function renderFinal(){
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 19h16"/></svg>
         Überblick als PDF herunterladen
       </button>
+    </div>
+
+    <div class="card">
+      <div class="video-wrap">
+        <iframe src="https://www.youtube-nocookie.com/embed/Sh0REtJ1o5w?rel=0&controls=1" title="Abschlussvideo zum Escape-Room" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      </div>
+      <div class="fallback-line">
+        <span>Video lädt nicht oder zeigt einen Fehler?</span>
+        <a class="btn btn-ghost" href="https://www.youtube.com/watch?v=Sh0REtJ1o5w" target="_blank" rel="noopener noreferrer">Direkt auf YouTube öffnen ↗</a>
+      </div>
     </div>
 
     <div class="arena">
